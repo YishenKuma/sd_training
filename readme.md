@@ -42,6 +42,11 @@ Content of training:
 > - [Lecture 8 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-2)
 > - [Lab 8](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-8)
 
+- [Day_9: Optimization in synthesis](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_9--optimizations-in-synthesis)
+
+> - [Lecture 9 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-3)
+> - [Lab 9](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-9)
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
 ### Lecture Topics
