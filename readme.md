@@ -1912,3 +1912,377 @@ Our timing paths still need to factor in the input transitions as well
 ![](https://github.com/YishenKuma/sd_training/blob/main/day8/49.JPG)
 
 > Similarly to before, once we perform synthesis with regard to the constraint set, the optimization is performed and the logic is squeezed. Now our timing is met in the timing path.
+
+ ## **Day_9 : Optimizations in Synthesis**
+
+### Lecture + VSDIAT recording topics
+
+Optimization goals are to:
+
+* enable optimization until cost is met 
+
+* control optimization performed, as optimization of one goal will harm other goals, the goals for synthesis is to meet timing, power, and area, and these three metrics are contradictory
+
+#### Combinational Optimization 
+
+Combinational optimizations saves power and reduces area by squeezing logic to get the most optimized design. 
+
+> One method which is used is known as constant propagation or direct optimization. This is the method of substituting  the values of known constants into expressions, and simplifying the logic, and then the hardware implementation can be minimized.
+
+The second method used is Boolean logic optimization (k-map , Quine McKluskey) 
+
+>  Boolean optimization refers to minimizing the Boolean functions . The simplification of the Boolean expression will lead to reduction in cost and complexity of design as the Boolean expression has been simplified. 
+
+We also have resource sharing, in which the cells are shared for usage instead of being used in a manner that may take up more requirement than necessary. The number of operators are reduced and the subsequent logic will be minimized. 
+
+Logic sharing is the process of optimization in which common logic within multiple expressions are shared to wherever it is applicable to reduce usage of complexity of design. 
+
+##### Balanced vs Preferential Implementation
+
+A balanced implementation is when each input will have around the same amount of delay throughout the combinational circuit. A Preferential implementation is when we are having paths that are more tight compared to others,  in this case the implementation can be performed to favour the tighter path with sacrificing on the timing to other paths, meaning adding more gates to the inputs.
+
+#### Sequential Optimization
+
+The basic methods of sequential optimizations are: 
+
+* Sequential Constant Propagation
+
+A constant is a sequential constant if it is able to produce an output that can be simplified compared to the original logic. If the output is unique with the constant, then it is not a sequential constant, and the logic cannot be optimized through this method.
+
+For example, a SET flop with D set to high, will produce an output of high regardless of change in SET or clock, thus the logic is simplified to output = high.
+
+* Retiming
+
+* Unused Flop Removal
+
+* Clock gating
+
+* Optimization of unloaded outputs
+
+There can be cases in which within the written Verilog, there are unloaded outputs, meaning the output of the design may not initialize on all outputs within the design. In this case,  the unused outputs may be optimize out and the circuit may be simplified based on the loaded output.
+
+> example: [unused output optimization]( https://github.com/YishenKuma/sd_training/blob/main/readme.md#unused-output-optimization)
+
+The advanced methods of sequential optimizations are:
+
+* state optimization
+
+* sequential logic cloning (floorplan aware synthesis)
+
+There may be cases however where we may want to retain the logic and not have optimization performed. This can help in the case where we can retain logic in the case that specs need to be changed. We can prevent the optimization from happening and preserve the logic and components to be used if needed. 
+
+The way we can control the sequential optimizations in DC is through the usage of the variables: 
+
+* compile_seqmap_propagate_constants
+
+> setting this as fales will not propagate the sequential constants
+
+* compile_delete_unloaded_sequential_cells
+
+> setting this as fales will not optimize designs where there are unused outputs
+
+* compile_register_replication
+
+> setting this as false will not allow for register cloning to optimize timing on high fanout nets 
+
+#### Special Optimizations
+
+* register retiming
+
+If we have a very complex combinational circuit in path that we want to further optimize, it is not so easy to partition the logic to be optimized. One way we can perform this additional optimization is by adding flops to the outputs, such that we introduce slack on the path, then we can slice a portion of the combinational logic and put it between the flops, that way ,the slack of the flops will be reduced, and the delay of the combinational logic will be delayed. Now that the critical path delay has reduced, our frequency can be increased, this is known as register retiming. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/36.JPG)
+
+In register retiming, we need to keep in mind the larger picture. The disadvantage in doing this is that in dividing the logic, we will have intermediate values after the flops, and these cannot be matched to the rtl waveforms. In the case that this type of optimization does not gel with the overall flow, then it is best to disable this. The repercussion of enabling this would mean that we would not know how the logic is being partitioned. 
+
+* Boundary optimization
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/37.JPG)
+
+When we enable boundary optimizations, the tool may dissolve boundaries present for modules in order to combine logic to get an optimum logic, this boundary will not be in the netlist anymore. The disadvantage of this method of optimization is that the functional (DV) design verification may have issues, as the hierarchical level is no longer there, we can longer find the previous signals within the boundary. The option for enabling or disabling boundary optimization is with set set_boundary_optimization <design> true|false.
+
+* Multi-cycle paths
+
+There can be some cases where the data need not be sampled on the first clock cycle. If the data for a path will only be sampled once every 2 cycle paths, then the tool needs to be told this, or else it will try to unnecessarily optimize the path as a single cycle path, the tool may overoptimize on the path and use up resources instead of optimizing on other paths. We can do this using the command set_multicyle_path. 
+
+* False paths
+
+False paths are paths that are not valid for STA. If we are having a path between two cells which are clocked differently, then we can set this path as a false path, since there is no relation between clock 1 and clock 2 .We perform this using the command set_false_path. An important thing to note that path is only async if the 2 clocks are not related, not just different, 2 clocks may be different but they can still be related.
+
+* External load vs Internal load 
+
+Sometimes in our design we can have a internal feedback at the output that is connected to the output load. If we were to increase the output load, then out internal feedback path will also be affected, as the delay would increase due to increase in output load, this is not what we want. To avoid this, we use set_isolate_ports, so that the internal path will not see and be affected by the output load. 
+
+#### How timing is checked?
+
+* single cycle paths
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/38.JPG)
+
+For single cycle paths, the capture edge will be on the consequent rising edge of the capture flop, for setup check. For hold timing, the capture edge will be one edge before setup. 
+
+* half-cycle paths
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/39.JPG)
+
+For half cycle paths, in which the capture flop clock pin is inverted. The capture edge will be on the consequent fall edge of the capture flop for setup check, and for hold it will be the falling edge one cycle before. 
+
+For half-cycle paths, the setup margin is very tight, whereas the hold margin is relaxed. 
+
+* multi cycle paths
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/40.JPG)
+
+For multi-cycle paths, where data is getting loaded once in every 2 or more cycles. We need to apply the command set_multicycle_path with the option -setup <number of cycles>. The hold will also be shifted, as the hold check will be checked one cycle before setup. However, this will cause the hold to be violated
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/41.JPG)
+
+The way to handle is to run an additional set_multicycle_paths command but with the -hold < number of cycles - 1>. This will make it such that the launch edge is now shifted forward.  
+
+### Lab day 9
+
+#### Combinational Optimization 
+
+##### opt_check1
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/1.JPG)
+
+>  from this Verilog file, we can see that there are 2 outputs, and for the two outputs, we constants used at the input points. 
+
+> For y1, the mux is selected between 0 and b based on the value of a. the logic will be y1 = !a.0 + a.b , which results to y1 = a.b. 
+
+> for y2, b is fed into and agte with constant 0, so resulting output will be 0, then this is fed into or gate with c, and the output is fed through inverter. Our final output will be y2 = !(c + (0.b) ) = !(c + 0) = !c.
+
+Thus through constant propagation, we will reduce the logic to the use of 1 and gate and 1 inverter.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/2.JPG)
+
+> as can be seen, after the compile is performed, the design is show the 2 components as discussed above. 
+
+##### opt_check2
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/3.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/4.JPG)
+
+> for this design, our output, y = a.1 + !a.b = a + !a.b = a + b. The design will be optimized to have only an or gate. 
+
+##### opt_check3
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/6.JPG)
+
+> for this design, our output, y = a.[c.b + !c.0] + !a.0 = a.c.b +a.0 +0 = a.c.b. The design will be optimized to have only a 3 input and gate. 
+
+##### opt_check4
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/8.JPG)
+
+> for this design, our output, y = !a.!c + a.((!b.a.c) + (b.c)) = !a.!c + a.!b.c +a.b.c = !a.!c +a.c. The design will be optimized to have only an xnor gate. Input b will be unused.
+
+#### Resource Sharing Optimization 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/9.JPG)
+
+> Based on the logic written in the netlist, the out put y will either be the result of a.b or c.d based on the value of sel, which would mean a use of 1 mux and 2 and gates, however as we discussed previously, through resource sharing, the logic can be optimized to use only 1 and gate with 2 muxes instead, which is better for power and area.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/10.JPG)
+
+> through the command report_area, we can see the area taken up by the combinational circuit as well as the list of devices used in the design. For this case, we have an area of 455.43, 42 ports, and total of 127 cells used. The mux is located at the start of the beginning of the logic, and not toward the output. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/11.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/12.JPG)
+
+>we can see that the design is broken into 2 parts, wherein the left side where the inputs are, the select lines are initialized into multiple muxes for each of the inputs a, b, c and d. Then on the right side we have the multiplier circuit. This is how the resource sharing is done, instead of having the mux closer to the outputs, the mux goes through many more combinational gates. 
+
+> we have set a max delay of 2.5 from all inputs to all outputs and synthesized the design. But what would happen if we made the timing path for select more restrictive.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/13.JPG)
+
+> after we set the max delay from sel to all outputs at value of 0.1, our timing is much more restrictive and out timing path is now violated.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/14.JPG)
+
+> now we perform synthesis once again and the design has been optimized based on the dependency of the restrictive path. We can see that our design has been greatly altered. The area and number of cells has increase greatly, this is because the optimization is done with regard to the restrictive path of sel, the timing needs to be ensured there, so the number of gates from that path is minimized while sacrificing on other paths.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/15.JPG)
+
+> select is not being used by the inputs, and instead is used directly to the outputs. This way the number of gates the sel path passes through is reduced and the timing can be met.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/16.JPG)
+
+> timing is met for  the restrictive path
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/17.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/18.JPG)
+
+> now we are going to restrict the design by setting a maximum value for area, previously after the previous synthesis, the previous area was above 900, now we will set a max value of 800. We can see that our timing is met and the are has been reduced below the max value. The number of cells and area have reduced, but the area was not able to be lower than the max value set, this may be due to the highly restrictive timing path.
+
+#### Sequential Optimization
+
+* dff_const1.v
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/19.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/32.JPG)
+
+> the Verilog file states that the asynchronous flop will output low upon high reset, and high for low reset.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/24.JPG)
+
+> we can see the cells of the design, a flop, inverter and a conb cell has been inferred. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/25.JPG)
+
+> The input d has been connected to the logic 1 pin of the conbi cell, which is a tie cell. In propagation of Vdd through design for all the components, there can be transience in the power that happen due to current being drawn from cells, this transience in the power cannot be seen by the gate terminal of CMOS, as it is very sensitive, therefor the D pin of sequential elements should never connect directly to the Vdd pins, but instead be connected to tie cells which can produce the 1 or 0 signal without any transience.  
+
+* dff_const2.v
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/20.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/33.JPG)
+
+> for this Verilog code, the asynchronous flop will output high upon high reset, and high for low reset.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/26.JPG)
+
+> our design is now only showing the q pin connected directly to the tie cell, the reason for this is as mentioned before, the design is optimized due to the sequential constant that will result in an output of 1 regardless of change in clk and reset pin. 
+
+* dff_const3.v
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/21.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/34.JPG)
+
+> here we have 2 asynchronous flops, where the first flop is a reset flop and the second flop is a set flop. The output of the first flop is connected to the input of second flop. In this logic, the output of our first flop will low from any point which the reset signal rises, until the clock rising edge after reset goes low. For the second flop however, during the period of set being high, the output will be high, and once the set goes low, the output will be set to the value of q1, which will should be high, however, we need to take into account the delay during that rising clock edge between flop 1 and flop 2, flop 2 will capture 0 before q1 has gone high, and q will only go high during the next rising edge. So q will is not be always high, and the design cannot be optimized based on this. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/27.JPG)
+
+* dff_const4.v
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/22.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/35.JPG)
+
+> in this case, both asynchronous flops are set flops, instead of previously where one was a reset flop. In this case, the flop behaviour is the same as from the dff_const2 design, so the output q should be always high. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/29.JPG)
+
+> the design has been optimized.
+
+* dff_const5.v
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/23.JPG)
+
+> in this case, both flops are reset flops, so the waveforms would most likely be as follows. This design would not be able to be optimized. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/30.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/31.JPG)
+
+* Using option compile_seqmap_propagate_constants
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/28.JPG)
+
+> lets take dff_const 2 which was able to be optimized earlier through sequential optimization. If we set the option compile_seqmap_propagate_constants to false, the the optimization should not be possible. As we can see form the above schematic, the sequential constant has not been propagated and the design was not optimized. 
+
+#### Boundary Optimization 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/42.JPG)
+
+> in this code, we are having an internal module, which contains the logic for a counter, which outputs data to the external top level when the value is ‘111’. This output is then connected as the enable pin for the mux connected to the input of flop in the top level. The asynchronous flop input is muxed between val_in or the feedback of output. 
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/43.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/44.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/45.JPG)
+
+> if we set the option set_boundary_optimization to false, then no optimization will be not be performed and the internal module and logic will remain the same.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/46.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/47.JPG)
+
+> Now we set the boundary optimization true for u_uim. We can see that the internal module is no longer there. The pins for u_im and u_im cell no longer exist as well as optimization has combined the logic with the top level logic.  
+
+#### Register Retiming
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/48.JPG)
+
+> in this Verilog file, we are having a multiplier followed by three registers between ports a, b, and c. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/49.JPG)
+
+> we can see the multiplier circuit as an internal module, connected to the top level 3 registers.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/50.JPG)
+
+> now that we have constrained the path, we can see that our timing path from the input path is violated
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/51.JPG)
+
+> using the command, compile_ultra -retime, our design has now changed. Now we can see that the multiplier circuit has been sliced and put in between the registers. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/52.JPG)
+
+> the timing path is still violated but now it is reduced
+
+#### Isolating output ports
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/42.JPG)
+
+> using the similar code from earlier, there is a feedback path that is providing the input feedback if enable signal to mux is low. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/53.JPG)
+
+> we can see the feedback path in the design above. We can see that the output port is driven by the same internal logic, which is undesirable, as the more the output load varies, the more the internal path will get affected. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/54.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/55.JPG)
+
+> Now we set an output load on the design, we can see this load being reflected onto the reg to reg paths. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/56.JPG)
+
+> The way we solve this is by isolating the port using command set_isolate_ports on the output port. Now we can see from the design after we optimize, the internal paths are isolated from the output port and any possible external load. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/57.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/58.JPG)
+
+> the timing report for the reg to reg path will also reflect this change, as the load is no longer effecting the path.
+
+#### Multicycle Paths
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/59.JPG)
+
+> in this verilog, we have 2 registers, where the output of the first register is connected to the enable pin of a mux, connected to the input of the second register. The mux output will be a.b only if the output of the first register is high. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/60.JPG)
+
+> if we set our constraints and report timing, we can see that the timing path is greatly violated. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/61.JPG)
+
+> now notice how the timing path is still violating after the compile_ultra command has been run. This is because in our design the output of register 1 will take a half-cycle before a high can be captured, this means that, our second register will only capture data at the second clock cycle. Thus we need to set this path as a multicycle path. Be sure to specify which paths to be set as multicycle paths, and not affect the single cycle paths. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/62.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/63.JPG)
+
+> once we have set our multicycle path, we can see that our timing path is no longer violated. If we look at the the timing path from all inputs, we can see the capture is happening at 8ps, instead of at 4ps.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/64.JPG)
+
+> however, if we look at the hold check, it is still violated, this is because the capture edge for the hold check has been shifted to the right as well, meaning the launc is at 0ps while capture is at 4ps, which is not good for hold check, as it is not a single cycle check. To solve this, we need to set_multicycle_path again for -hold. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day9/65.JPG)
+
+> as can be seen, the path is no longer violating, and this is because the capture edge has been shifted backward to 0ps instead of 4ps. 
