@@ -47,6 +47,11 @@ Content of training:
 > - [Lecture 9 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-3)
 > - [Lab 9](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-9)
 
+- [Day_10: QOR](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_10--qor)
+
+> - [Lecture 10 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-4)
+> - [Lab 10](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-10)
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
 ### Lecture Topics
