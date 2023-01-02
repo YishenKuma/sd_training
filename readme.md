@@ -2291,3 +2291,138 @@ Thus through constant propagation, we will reduce the logic to the use of 1 and 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day9/65.JPG)
 
 > as can be seen, the path is no longer violating, and this is because the capture edge has been shifted backward to 0ps instead of 4ps. 
+ 
+ ## **Day_10 : QOR**
+
+### Lecture + VSDIAT recording topics
+
+#### Report Timing Generation and Analysis
+
+One thing to understand for timing paths within a logic circuit is that the propagation delay is not the same between the timing paths,  (Input[rise] to Output[fall]) and (Input[fall] to Output[rise]). The reason for this is due to the fact that the mobility of holes is not equal to the mobility of electrons. Different input logics will have different input transitions due to difference in charge in the combinational logic, as such rise time and fall time will not be the same.
+
+The usage of the option “-delay_type min” when using report timing shows the timing path from the startpoint at the fall edge. Default setting for timing report is to show -delay_type max, which is to show the timing path from startpoint at rise edge.  These timing paths will not be same as mentioned before, the fall and rise time for components are not the same. 
+
+The usage of the option -fall_from/rise_to when using report timing will show the timing path of which the specified edge of specified pin is either fall edge or rise edge.
+
+For setup, he arrival time refers to the time taken for the data to go from the input through the gates to the output endpoint. The required time will be the clock period minus of the setup time and delays introduced on the circuit. The setup slack will be the required time – the arrival time. 
+
+For hold however, as it is a zero cycle check, there will be no period on the required time, so it is only the hold time and the uncertainties. The hold slack will be equal to the arrival time – the required time, as data should change only after data hold time. 
+
+The timing path report is run without options will show the timing path with the lowest slack, if any of the paths has a negative slack, meaning it is violating, then that path will be shown.
+
+### Lab day 10
+
+#### Report Timing
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/1.JPG)
+
+> Verilog file used for lab, in which 3 flops are used with combinational logics are used between the flops.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/2.JPG)
+
+> Once the constraints on the design have been set, and design is compiled, we report the timing. The ways we can tell that this is a setup check is from the path type, which is max. and the launch edge is at 0 while capture edge is the next cycle. There is also a library setup time shown. The slack is calculated based on required time – arrival time.
+
+> the option -from IN_A. The path assumes a fall from IN_A. The letter after the time taken through path f/r denotes either fall or rise. The fall to rise time of U14 is 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/3.JPG)
+
+> by default, this is the worst timing path seen by design, if we use the option -rise_from IN_A, we will see the timing path assuming rise edge from IN_A. Notice how the delay is different compared to the delay in fall edge previously.  The rise to fall time of U14 is . The slack is calculated based on arrival time – required time.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/4.JPG)
+
+With the option -delay min, we are now checking the hold timing path. Notice how the capture and launch are at the same cycle path. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/5.JPG)
+
+> we can also use the -thr option to see the worst timing path that passes through specified pin. This is by default the max timing path.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/6.JPG)
+
+> notice between the setup and hold path through U15/Y, the cell is taking a delay of 53 ps in the max path while taking a delay of 66 ps. The reason for this is because even though we set the timing path to be max, the delay through the cell may not necessarily be at its max delay, as the max option for timing path is dependant on the overall delay. 
+
+#### Check Timing, Check Design, Set max capacitance, HFN
+
+There can be problems in loading the design into the tool due to human error that might have been overlooked. In order to check whether the loaded was correctly loaded into the tool, there are a few commands that can be used to verify if design loaded correctly. 
+
+* check_design 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/7.JPG)
+
+> check_design shows there is a feedthrough from the input port clk to the output port clock, which is perfectly fine.
+
+* check_timing
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/8.JPG)
+
+> check timing will check whether the design is properly constrained or not, since we have not set any constraints on the design, it is not proper, and thus the check is showing warning. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/10.JPG)
+
+> once we set these constraints, these warnings prompt will no longer appear, excluding for the clock points, as we can constrain a data port with a clock port, but not a clock port with itself, so the clock ports do not be defined, so these warnings are not significant.  
+
+* report_constraints
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/9.JPG)
+
+> report will show only the tool default constraints from memory if no constraints are defined on the design.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/12.JPG)
+
+> once constraints, have been defined, the report will show these constraints. The report will also show the max transition, max capacitance, max delay/setup, etc.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/13.JPG)
+
+> this verilog file is for a 127 – 1 MUX, in which the y will be assigned to the value of input k if the value of sel is equal to k during the for loop for 128 iterations. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/14.JPG)
+
+> If we synthesize this design, there will be no sequential cells, as y was assigned in a for loop within always, the latch was inferred during read_verilog due to the always statement. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/15.JPG)
+
+> the select is going to so many fanout nets, we need to filter this as the higher number of fanouts will increase the capacitance of the net. Our timing path will be violated greatly as a result. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/16.JPG)
+
+> report_constraint -all_violators will show all the violating paths.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/17.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/18.JPG)
+
+> now we perform compile ultra with max delay and max capacitance values set. Now we can see that everything has been met (leakage power is negligible). Our timing path will also be optimized to not be violated as well.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/19.JPG)
+
+> our net capacitances have also been reduced compared to previously, this is because the high fanout nets have been broken up to lesser fanouts. Whenever we perform synthesis,  we should limit the capacitance so that high fanout nets can be buffered early. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/20.JPG)
+
+> This verilog file had 128 output pins being used by the design, compared to previously where only 1 output pin is used for 1 value of y assigned to k. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/21.JPG)
+
+> we can see our net is having a fanout of 128, which is causing an extremely high capacitance value. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/22.JPG)
+
+> once we set the max capacitance value, and perform synthesis, the high fanout nets will be broken, and the capacitance values will be reduced and met within constrained value. Instead of 1 net faning out into 128 nets, it will break into a small number of nets, which will further break into more nets sequentially. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/23.JPG)
+
+> the high fanout net is split such that the single pin is not having the burden of driving such a heavily loaded net. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/24.JPG)
+
+> Our trans value is still quite high however, the way we offset this in synthesis is by setting max transition.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/25.JPG)
+
+> the paths which are having transitions violated. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/26.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day10/27.JPG)
+
+> once we synthesize design with constrained transition, there will no longer be any violating paths. The synthesis tool has changed the buffer to have a higher drive strength to be able to meet the max trans value of the design.
+
