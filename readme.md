@@ -52,6 +52,8 @@ Content of training:
 > - [Lecture 10 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-4)
 > - [Lab 10](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-10)
 
+- [Day_11: Introduction to BabySoC](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_11--introduction-to-babysoc)
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
 ### Lecture Topics
