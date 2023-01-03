@@ -2431,3 +2431,118 @@ There can be problems in loading the design into the tool due to human error tha
 
 > once we synthesize design with constrained transition, there will no longer be any violating paths. The synthesis tool has changed the buffer to have a higher drive strength to be able to meet the max trans value of the design.
 
+## **Day_11 : Introduction to BabySOC**
+
+### WhatisSoCandWhySoC?
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day11/1.JPG)
+
+SOC stands for system on chip.  It is a single-die chip that integrates different IP cores on it. These IPs can vary from digital uses (microprocessors) to analog uses (5Gbroadbandmodems)
+ 
+The SOC design usually includes the CPU, memory interfaces, memory interfaces, on-chip input/output devices, input/output interfaces, and secondary storage interfaces, often alongside other components such as radio modems and a graphics processing unit (GPU), all on a single substrate.
+
+The design of SOC can also vary depending on the requirement, to consist of either digital or analog signal processing system or floating-point unit.
+
+The functionality of an SOC is based on its performance, power consumption, and semiconductor die area. A greatly designed SOC will have higher performance while having reduced power consumption on a small area. 
+
+### TypicalstructureofSnapdragonSoC
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day11/2.JPG)
+
+The snapdragon SoC’s are a type of SoC designed for mobile devices. The SoC acts as the brains of the phones which handles everything from the operating system to user inputs. The SoC design incorporates different modules to allow the various uses of a mobile device such as the Wifi, GPS, Camera, Media storages, Display, etc.
+
+### TypesofSoC
+
+We can have SoC either built a microprocessor, microcontroller, or built as a specialized application-specific IC SoC for specific applications no suited for the microprocessors and microcontrollers. 
+
+### SoCStructure
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day11/3.JPG)
+
+The SoC design structure consists of hardware functional units, including microprocessors running software code, as well as communication subsystem needed to connect, control, direct, and interface between the functional modules. The intermodule communication of an SoC design includes bus-based communication and network on chip.
+
+The Functional components examples:
+
+* processer cores: refers to the brain if the CPU, retrieving instructions and performing operation and calculations based on the instructions
+
+* memory: RAM/ROM, needed for storing huge datas
+
+* DSP: digital signal processor, used ofor audio signal and digital image processing, as well as telecommunications and sonar and radar 
+
+* Encoder/Decoder: combinational circuitry used to modify wither binary data into a number of output lines, or a number of output lines into binary data, fundamental in translation software
+
+* Network Interface card: provides device with full time connection to network 
+
+* GPU: Graphical processing unit, designed to handle graphics such as 2d and 3d, and video more efficiently.
+
+* Peripheral devices: provide the input/output functions for computer, does not perform any core somputing process but simply allows connection between computer and external devices to allow more capabilities and functionality
+
+* UART : Universal Asynchronous Receiver Transmitter, a universal serial communication protocol that transmits data serially between systems, can be used for both transimission and reception
+
+
+### SoCDesignFlow
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day11/4.JPG)
+
+The design flow of an SoC starts at design specification, which is the most crucial step where the specifications of the system are defined and created. 
+
+Architecture design where the blocks to be used are decided and the hierarchy system is chosen based on the operating system to meet the design specifications. 
+
+The logic design/schematic design has to be made for the system to realize the design during the basic logic design.
+
+Then the logic of the system will need to be verified, to establish if the system functionality is as intended. If the logic is not as intended then, modification would be needed. 
+
+Following this, the design would be translated from a schematic level to a physical level using basic building blocks.
+
+Then similarly, we need to verify the physicality of layout based a few important checks which are DRC (design rule checks), LVS (layout versus schematic), power and timing analysis. 
+
+Once the design is verified and the GDS file has been created, it is appropriate to proceed for the fabrication of the design.
+
+### How are Microchips made?
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day11/5.JPG)
+
+The flow of fabrication begins with the slicing of silicon ingots into wafers, which are polished and cleaned. Then we will begin epitaxial growth, which is the process of growing the layer of silicon dioxide onto the surface of wafer.
+
+The two main steps in transferring the complex design of an SoC is through Photolithography and etching. 
+
+Photolithography is the process of making the wafer with a layer of light-sensitive liquid uniformly, and then exposing the pattern of the design on to the wafer, shot by shot, causing the exposed areas to become hardened, and areas that were not exposed can be washed away, leaving only a mask of the design.
+
+The etching process is to remove the wafer surface to create the necessary patterns of the design based on the mask created in the photolithography stage. Either through chemical or physical etching, the substate is etched away to leave the necessary holes for other steps in the flow such as doping or metallization. 
+
+Doping is to create the necessary n-wells and p-wells by altering the properties of the silicon through doping with elements such as boron or phosphorus. 
+
+Metallization is where a thin layer of aluminium will be deposited to create the necessary connectivity of the design. 
+
+These steps will be repeated again and again for each successive layer until al the chips are complete.  
+
+### Introduction to BabySogC
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day11/6.JPG)
+
+ BabySoC refers to a small chip but a powerful RISC V SoC, the main purpose in designing this is to test 3 open source IP cores and calibrate the analog component of the design. The baby SoC contains an PLL to generate stable clock, and a 10 bit digital to analog converter to communicate with other analog devices. The babySoC also contains an rvmyth processor which is simple RISC V based CPU. 
+
+* RISC V
+
+RISC V is an open standard instruction set architecture (ISA) based on established RISC principles. RISC V is used by many developers because it simplifies the instructions given to the processors to accomplish tasks, as well as provides the flexibility to create thousands of possible custom processors. This allows companies to get their designs marketed faster. 
+RISC V applications include artificial intelligence, augmented reality, automotive, cloud srevers, computing decides and controllers, general purpose processors, internet of things, machine learning, network edge, and virtual reality.
+
+### BabySoC Components
+
+* RVMYTH
+
+Refers to the core, which is a simple RISC V based CPU
+
+* PLL
+
+PLL stands for phased locked loop, which is a control system that generates an output signal with a phase related to the phase of the input signal. PLL are used for synchronization purposes, including clock generation and distribution.
+
+* DAC 
+
+DAC stands for digital to analog converter, it is a system that converts digital signal into an analog signal. DACs are widely used in modern communication systems for the generation of digitally defined transmission signals.
+
+### Introduction to Modelling
+
+The modelling refers to the integration of the components together to create the babySoC.
+Some initial inputs will be fed into the design to make the PLL start generating the proper clock for the circuit. Then the clock signal will make the processor start executing instructions in its imem. Then the register will be filled with a value each cycle. These values will be used by dac core to provide the final output. 
+
