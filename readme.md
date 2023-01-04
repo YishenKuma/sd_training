@@ -2435,7 +2435,7 @@ There can be problems in loading the design into the tool due to human error tha
 
 ## **Day_11 : Introduction to BabySOC**
 
-### WhatisSoCandWhySoC?
+### What is SoC and Why SoC?
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day11/1.JPG)
 
@@ -2447,17 +2447,17 @@ The design of SOC can also vary depending on the requirement, to consist of eith
 
 The functionality of an SOC is based on its performance, power consumption, and semiconductor die area. A greatly designed SOC will have higher performance while having reduced power consumption on a small area. 
 
-### TypicalstructureofSnapdragonSoC
+### Typical structure of Snapdragon SoC
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day11/2.JPG)
 
 The snapdragon SoC’s are a type of SoC designed for mobile devices. The SoC acts as the brains of the phones which handles everything from the operating system to user inputs. The SoC design incorporates different modules to allow the various uses of a mobile device such as the Wifi, GPS, Camera, Media storages, Display, etc.
 
-### TypesofSoC
+### Types of SoC
 
 We can have SoC either built a microprocessor, microcontroller, or built as a specialized application-specific IC SoC for specific applications no suited for the microprocessors and microcontrollers. 
 
-### SoCStructure
+### SoC Structure
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day11/3.JPG)
 
@@ -2482,7 +2482,7 @@ The Functional components examples:
 * UART : Universal Asynchronous Receiver Transmitter, a universal serial communication protocol that transmits data serially between systems, can be used for both transimission and reception
 
 
-### SoCDesignFlow
+### SoC Design Flow
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day11/4.JPG)
 
