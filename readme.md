@@ -54,6 +54,11 @@ Content of training:
 
 - [Day_11: Introduction to BabySoC](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_11--introduction-to-babysoc)
 
+- [Day_12: BabySoC Modelling](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_12-babysoc-modelling-)
+
+> - [Lecture 12 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-12)
+> - [Lab 12](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-12)
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
 ### Lecture Topics
