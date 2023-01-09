@@ -2733,3 +2733,30 @@ Then we can view the generated vcd file using “dve &” command
 
 > code was modified to allow compilation to be able to execute. Renaming of modules to bring in the correct inputs. Real elements not declared with wire. Timescale declared in both files. And other changes made until no warnings were seen. 
 
+#### Simple Circuit Modelling
+ 
+circuit chosen to be done is the half adder circuity, which is a simple and + or gate combination.
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day12/11.JPG)
+ 
+> circuit design
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day12/12.JPG)
+ 
+> truth table for circuit
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day12/7.JPG)
+ 
+> code for half adder verilog, take note to inlcude the timescale in both files
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day12/8.JPG)
+ 
+> testbench for half adder circuit, be sure to include dumpvars to generate vcd to be viewed
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day12/9.JPG)
+ 
+> compiling deisgn for half adder circuit
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day12/10.JPG)
+ 
+> waveform for design supports truth table, not all states shown however
