@@ -59,10 +59,10 @@ Content of training:
 > - [Lecture 12](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-12)
 > - [Lab 12](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-12)
 
-- [Day_13: Post Synthesis Simulation]()
+- [Day_13: Post Synthesis Simulation](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_13-post-synthesis-simulation)
 
-> - [Lecture 13]()
-> - [Lab 13]()
+> - [Lecture 13](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-13)
+> - [Lab 13](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-13)
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
@@ -2821,3 +2821,5 @@ We will once again be using DC shell to synthesize the RTL code and then generat
 ![](https://github.com/YishenKuma/sd_training/blob/main/day13/15.JPG)
 
 > then we generate the gate level netlist to be used for post synthesis simulation using write_verilog
+ 
+pending to be update
