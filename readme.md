@@ -56,8 +56,13 @@ Content of training:
 
 - [Day_12: BabySoC Modelling](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_12-babysoc-modelling-)
 
-> - [Lecture 12 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-12)
+> - [Lecture 12](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-12)
 > - [Lab 12](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-12)
+
+- [Day_13: Post Synthesis Simulation]()
+
+> - [Lecture 13]()
+> - [Lab 13]()
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
@@ -2760,3 +2765,59 @@ circuit chosen to be done is the half adder circuity, which is a simple and + or
 ![](https://github.com/YishenKuma/sd_training/blob/main/day12/10.JPG)
  
 > waveform for design supports truth table, not all states shown however
+
+## **Day_13: Post Synthesis Simulation**
+
+### Lecture Day 13
+
+#### Pre synthesis Simulations vs Post synthesis simulation
+
+The reason to having pre synthesis simulations, also known as behavioural simulation, is to model the design and check its functionality internally. 
+
+In post synthesis simulation, the entire design is simulated based on the synthesized netlist with respect to the corresponding library files for the design. 
+
+The purpose in the pre synthesis simulation is to check the simulation based on the logic that was designed. Whereas for post synthesis simulation, it is based on the gate delays in the design, which can affect both the timing and functionality. The mismatch between the pre and post synthesis simulation shows what may have been swrongly used for the operators and inference of latches. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/101.JPG)
+
+The constructs used in the verilog scripts may not be synthesizable constructs, so in performing both pre and post synthesis simulation, there are differences that need to be accounted for in the verilog or testbench files.
+
+#### GLS
+
+Refers to gate level simulation, which is what post synthesis is, where the gate level refers to the netlist view of a circuit. 
+
+The netlist is not just of the gates, but a complete connection list consisting of gates and IP models with full functional and timing behaviours. 
+
+RTL simulation or pre synthesis simulation does not take into account any delay as the events generally occur on the active edge of the clock. GLS however can take into account the timing delays of the library components. 
+
+The purpose of having GLS is to boost the confidence of the design implementation and help verify dynamic circuit behaviour, which cant be done by static methods. 
+
+### Lab Day 13
+
+We will once again be using DC shell to synthesize the RTL code and then generating the output netlist to be used for the gate level simulation. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/2.JPG)
+
+> Firstly we need to read in the correct library file, BUT the files must be in .db format and not .lib format, so for this we must convert the /libs to .dbs though the lc shell tool. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/8.JPG)
+
+> Be sure to set the target libraries and the link library for the dc shell pointed to the .db files
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/9.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/10.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/11.JPG)
+
+> Keep in mind the non-synthesizable constructs that were mentioned earlier, as real declarations are not supported by synthesis tool, so these elements must be modified from the files. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/14.JPG)
+
+> the verilog files will need to be error free in order to be able to be read into the tool and synthesized during read_verilog.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/15.JPG)
+
+> then we generate the gate level netlist to be used for post synthesis simulation using write_verilog
