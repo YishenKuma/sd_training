@@ -2818,8 +2818,35 @@ We will once again be using DC shell to synthesize the RTL code and then generat
 
 > the verilog files will need to be error free in order to be able to be read into the tool and synthesized during read_verilog.
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day13/15.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/20.JPG)
+
+> Our current design however is not read correctly as the current design is clk_gate.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/21.JPG)
+
+> We need to use the command “read_file {rvmyth_avsddac.v avsddac.v mythcore_test.v clk_gate.v} -autoread -format verilog -top rvmyth_avsddac” in order to set the top module of the design to be rvmyth_avsddac
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/22.JPG)
+
+> Linking design, unresolved VSSA reference to be debugged
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/23.JPG)
+
+> Compiling design
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/24.JPG)
 
 > then we generate the gate level netlist to be used for post synthesis simulation using write_verilog
- 
-pending to be update
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/25.JPG)
+
+> generated netlist
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/26.JPG)
+
+> gate level netlist
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/27.JPG)
+
+> vcs  gls.v sky130_fd_sc_hd.v primitives.v
+
