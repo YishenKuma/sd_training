@@ -2805,6 +2805,8 @@ We will once again be using DC shell to synthesize the RTL code and then generat
 ![](https://github.com/YishenKuma/sd_training/blob/main/day13/8.JPG)
 
 > Be sure to set the target libraries and the link library for the dc shell pointed to the .db files
+ 
+#### Compiling Rvmyth_asvddac
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day13/9.JPG)
 
@@ -2826,27 +2828,123 @@ We will once again be using DC shell to synthesize the RTL code and then generat
 
 > We need to use the command “read_file {rvmyth_avsddac.v avsddac.v mythcore_test.v clk_gate.v} -autoread -format verilog -top rvmyth_avsddac” in order to set the top module of the design to be rvmyth_avsddac
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day13/22.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/31.JPG)
 
-> Linking design, unresolved VSSA reference to be debugged
+> Linking design
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day13/23.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/32.JPG)
 
 > Compiling design
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day13/24.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/33.JPG)
 
 > then we generate the gate level netlist to be used for post synthesis simulation using write_verilog
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day13/25.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/35.JPG)
 
 > generated netlist
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day13/26.JPG)
 
 > gate level netlist
+ 
+##### Checking design
+ 
+keep in mind we have yet to set any constraints on the design, and any constraint that may be present in loaded from the DC tool memory.
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/36.JPG)
+ 
+>  check_design
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/37.JPG)
+ 
+> check_timing
 
+####  Compiling Rvmyth_asvdpll
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/3.JPG)
+ 
+> error in read_lib for asvdpll.lib 
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/4a.JPG)
+ 
+> fixes to file to make it readable
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/40.JPG)
+ 
+> error encountered in reading verilog file due to the real elements that are not synthesizable
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/41.JPG)
+ 
+> real need to be changed to wire, $realtime variable cannot be used and must be replaced with $ytime as realtime will return a value of 1.6, where as what we need is an integer value, which can be reuturened by using $time instead. 
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/42.JPG)
+ 
+> reading in design after appropriate changes made
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/43.JPG)
+ 
+> compiling design
+ 
+ ![](https://github.com/YishenKuma/sd_training/blob/main/day13/44.JPG)
+
+> generating netlist
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/45.JPG)
+
+> generated netlist
+ 
+##### Checking design
+ 
+keep in mind we have yet to set any constraints on the design, and any constraint that may be present in loaded from the DC tool memory.
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/36.JPG)
+ 
+>  check_design
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/37.JPG)
+ 
+> check_timing
+ 
+####  Compiling vsdbabysoc
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/50.JPG)
+ 
+> error encountered in reading verilog file due to the real elements that are not synthesizable
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/51.JPG)
+ 
+> real need to be changed to reg, or removed
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/52.JPG)
+ 
+> reading in design after appropriate changes made
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/53.JPG)
+ 
+> compiling design
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/54.JPG)
+
+> generated netlist
+ 
+##### Checking design
+ 
+keep in mind we have yet to set any constraints on the design, and any constraint that may be present in loaded from the DC tool memory.
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/56.JPG)
+ 
+>  check_design
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day13/57.JPG)
+ 
+> check_timing
+ 
+#### Post synthesis simulation to check mismatch between RTL and GLS
+ 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day13/27.JPG)
 
 > vcs  gls.v sky130_fd_sc_hd.v primitives.v
+ 
+Error encountered pending debug
 
