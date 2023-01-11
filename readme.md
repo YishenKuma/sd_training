@@ -64,6 +64,11 @@ Content of training:
 > - [Lecture 13](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-13)
 > - [Lab 13](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-13)
 
+- [Day_14: Post Synthesis Simulation](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_14-synopsys-dc-and-timing-analysis)
+
+> - [Lecture 14](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-14)
+> - [Lab 14](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-14)
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
 ### Lecture Topics
