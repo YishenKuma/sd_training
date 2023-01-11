@@ -2948,3 +2948,114 @@ keep in mind we have yet to set any constraints on the design, and any constrain
  
 Error encountered pending debug
 
+## **Day_14: Synopsys DC and Timing Analysis**
+
+### Lecture Day 14
+
+* Corners of PVT
+
+PVT refers to process, voltage, temperature
+
+> Process: refers to the variation I the parameters of transistors during fabrication, as layers getting fabricated cannot be uniform across the die
+
+> Voltage: refers to the varying voltages on chip during operation, can be cause by few reason such as IO drop or supply noise from parasitic inductance
+
+> Temperature: refers to the varying temperature of chip during operation due to power dissipation in the MOS-transistors  which will affect the delay on the cells
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/1.JPG)
+
+> effect of PVT on the delays introduced on circuit
+
+IC chips are designed such that that can function in a wide variety of temperatures and voltages. For this reason, the must simulate the design at different conditions of PVT. These conditions are known as corners. 
+
+#### Timing Terminologies
+
+The values below show how the deisgn could be missing the timing requirements. Looking at these values will help us in optimizing design. 
+
+* WNS
+
+ Worst negative slack – refers to the slack of the path with the worst timing failure, if WNS is positive, it means that the path has passed, if it is negative then it has failed. Refers to setup time.
+
+* WHS
+
+Worst hold slack – refers to the slack of the hold path with the worst timing failure. 
+
+* TNS
+
+Total negative slack – sum of the total negative path slacks, or the sum of all WNS
+
+* THS
+
+Total hold slack – sum of the total negative hold slack paths, of the sum of all WHS 
+
+### Lab Day 14
+
+#### Using Timing Libs for different PVT corners
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/101.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/102.JPG)
+
+> cloning the libs into directory
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/103.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/104.JPG)
+
+> schematic design of the babysoc 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/105.JPG)
+
+> inputs and outputs of design
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/106.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/a.JPG)
+
+> clock is not a port in this design as the clk is genertated by pll, so to create the clock, we will use the pins uut2/CLK, which is the output of PLL
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/107.JPG)
+
+> constraints set for design, constrains are set tightly to have the paths violated to see the effect of the different PVT corners.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/108.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/109.JPG)
+
+> error in reading lib files for PVT corners, these errors haver to be resolved before the lib file can be read and the conversion to db can be done by lc_shell
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/110.JPG)
+
+> cross checking lib file that give error with successfully read lib file and making corrections based on that
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/111.JPG)
+
+> lib file successfully converted to db, now we repeat this to get the dbs for alkl PVT corner lib files
+
+#### Documentation of different PVT corners
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/108.JPG)
+
+> using the command report_qor to get the value of wns, tns, whs, ths
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day14/113.JPG)
+
+> now we read in all the converted libs to check the values for the different PVT corners
+
+*lib_file* | *wns* | *whs* | *tns* | *ths*
+--- | --- | --- | --- | ---
+sky130_fd_sc_hd__tt_025C_1v80 | 0.60 | 0.09 | 547.98 | 8.45
+sky130_fd_sc_hd__ff_100C_1v65 | 0.10 | 0.15 | 69.02 | 87.96
+sky130_fd_sc_hd__ff_100C_1v95 | 0.00 | 0.20 | 0.00 | 222.95
+sky130_fd_sc_hd__ff_n40C_1v56 | 0.48 | 0.11 | 440.36 | 13.98
+sky130_fd_sc_hd__ff_n40C_1v65 | 0.21 | 0.14 | 174.23 | 69.26
+sky130_fd_sc_hd__ff_n40C_1v76 | 0.02 | 0.18 | 5.25 | 142.57
+sky130_fd_sc_hd__ss_100C_1v40 | 4.50 | 0.00 | 5489.95 | 0.00
+sky130_fd_sc_hd__ss_100C_1v60 | 2.60 | 0.00 | 3044.51 | 0.00
+sky130_fd_sc_hd__ss_n40C_1v28 | 11.75 | 0.00 | 15530.87 | 0.00
+sky130_fd_sc_hd__ss_n40C_1v35 | 7.80 | 0.00 | 10208.25 | 0.00
+sky130_fd_sc_hd__ss_n40C_1v40 | 6.57 | 0.00 | 8380.09 | 0.00
+sky130_fd_sc_hd__ss_n40C_1v44 | 5.87 | 0.00 | 7114.41 | 0.00
+sky130_fd_sc_hd__ss_n40C_1v76 | 1.90 | 0.00 | 1982.41 | 0.00
+
+ 
