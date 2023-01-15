@@ -69,6 +69,12 @@ Content of training:
 > - [Lecture 14](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-14)
 > - [Lab 14](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-14)
 
+- [Day_15: Inception of EDA and PDK](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_15-inception-of-eda-and-pdk)
+
+> - [Lecture 15 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-15)
+> - [Lab 15](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-15)
+
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
 ### Lecture Topics
