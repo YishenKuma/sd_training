@@ -3062,5 +3062,320 @@ sky130_fd_sc_hd__ss_n40C_1v35 | 7.80 | 0.00 | 10208.25 | 0.00
 sky130_fd_sc_hd__ss_n40C_1v40 | 6.57 | 0.00 | 8380.09 | 0.00
 sky130_fd_sc_hd__ss_n40C_1v44 | 5.87 | 0.00 | 7114.41 | 0.00
 sky130_fd_sc_hd__ss_n40C_1v76 | 1.90 | 0.00 | 1982.41 | 0.00
-
  
+## **Day_15: Inception of EDA and PDK**
+
+### Lecture Day 15
+
+#### Introduction to QFN-48 Package, chip, pads, core, die and IPs
+
+* Package
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/1.JPG)
+
+The flat no leads packages, surface mount technologies, are used to physically and electrically connect ICs to PCBs. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/2.JPG)
+
+The chips sit sin the centre of the package, wire bonds are used for the connectivity between the package and the chip, allowing the external signals into the chip. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/3.JPG)
+
+The elements within the package include:
+
+* Pad: intermediate structures connecting the internal signals from the core of IC to the external pin of the chip, prevents external charges from damaging the core inside
+
+* Core: the section of the chip where the fundamental logic of the design is placed (Macros, IPs, Etc,.)
+
+* Die: the die refers to the square of silicon containing the integrated circuit 
+
+* Foundy IPs: Macro cells developed with the intent of licencing to multiple vendor for using as building blocks in different chip designs, known as Intellectual Property
+
+* Macros: Simple custom built cell serving a specific functional purpose that can be found through open sources
+
+#### Introduction to RISC-V
+
+RISC-C is an ISA (instruction set architecture), which is a language which allows us to talk to the computer. If we want a pass a particular information to the hardware of computer, we need top translate this information into a binary format which is readable by the hardware. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/4.JPG)
+
+For example, we want to run a c program. The c commands will first be compiled into assembly language. The assembly language will be converted into the binary format or machine language. This can be read by the hardware to give us the desired output. But we may need to implement the HDL (hardware description language) interface between the RISC-V architecture and the layout, in order to implement the RISC-V specifications through RTL.
+
+#### From Software Applications to Hardware
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/5.JPG)
+
+The application software will enter into the system software block before going into the hardware, the system software is where the conversion into binary language takes place. The System software components icnlude the Operating System (OS),  Compile and assembler.
+
+* OS
+
+Handles IO operations, allocates memory, handles low level system functions, and convert the assembly language of application software and convert into binary language. 
+
+* Compiler
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/7.JPG)
+
+Converts the programming language (C, C++, Java, …) into their respective instructions. These instructions act as an abstract interface between the programming language and the hardware, which is also known as the Instruction Set Architecture (ISA), or the “architecture of the computer”. The RTL description language which implements the instruction set, can then be synthesized to then produce the synthesized netlist, then the physical design implementation of the netlist. 
+
+* Assembler
+
+Takes in the instructions output by the compiler and produces the binary language for the hardware to read
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/6.JPG)
+
+> example of the flow in the case of a stopwatch application
+
+#### all components of open-source digital asic design
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/8.JPG)
+
+In order to design ASICs, we require HDL including the RTL IPs, EDA tools, and the Process Design Kit (PDK). 
+
+* PDK
+
+Process Design Kits are the interface between the Fab and the designer, instead of having the design being tightly integrated with the manufacturing.
+
+The PDK Includes process design rules (DRC, LVS, PEX), device models, digital standard cell libraries, IO libraries, etc. 
+
+* EDA Tools 
+
+LVS, DFT, DFM, Power Planning, CTS, STA, Detailed Routing, RTL synthesis, FLoorplanning, etc.
+
+ASIC design requires many steps ad the process is very complex, as such, a methodology is needed. The methodology is implemented through the RTL to GDSII flow
+
+#### Simplified RTL to GDSII Flow
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/9.JPG)
+
+The flow begins with the RTL model and ends with the ready to fabricate masked set layout in the GDSII format. 
+
+The major steps in the flow is:
+
+* Synthesis: 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/10.JPG)
+
+The RTL model is converted to a circuit out of components based on the standard cell libraries, resulting circuit is referred to as the gate-level netlist
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/11.JPG)
+
+The standard cells within the standard cell libraries have regular layout, and have different models or views. 
+
+* Floorplanning
+
+Objective is to plan the silicon area and create robust power distribution network. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/12.JPG)
+
+In Chip floor-planning,  the chip die is partition between different system building blocks, and the I/O pads are placed
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/13.JPG)
+
+In macro floorplaning, the dimensions, pin locations and rows are defined
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/14.JPG)
+
+In power planning, the power network is constructed. Typically, the chip is powered by multiple ground and VDD pins, the power plans are connected to components through rings and straps, the parallel connections are meant to avoid high resistance and address electromigration problem.  The network will typically use upper metal layers as compared to lower metal layers as they are thicker. 
+
+* Placement
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/15.JPG)
+
+In this step, the cells are placed in the floorplan rows, aligned with the sites. Macros would be placed through placing gate level netlist cells on the rows and very close to each other to reduce interconnect delays and enable successful routing.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/16.JPG)
+
+Placement will be done through 2 methods, Global and Detailed. Global placement tries to find optimum placement for all cells, the positions are not necessarily legal and cells may overlap. In detailed routing, the placements from global placement is modified such that the placement of cell will become legal 
+
+* Clock Tree Synthesis
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/17.JPG)
+
+Purpose of the step is to deliver all the clocks to all the sequential elements with minimal skew and in good shape. 
+
+* Routing
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/18.JPG)
+
+In this step, the interconnect nets are implemented through the available metal layers. The metal tracks from the routing grid. As the routing grid is usually huge, the design is usually divided and concurred. Global routing will generate the routing guides, then detailed routing implements the wiring according to the routing guides. 
+
+* Sign-Off
+
+The final step in the flow, where the final layout is constructed, and we perform Physical and Timing verifications. The layout needs to honour design rules, match with the original gate-level netlist, timing constraints are met, and  design is operating at desired frequency. 
+
+#### Introduction to OpenLANE and Strive chipsets
+
+When doing open source ASIC flow, we need to be wary of the tool qualification, tool calibration and any missing tools. With the release of open source PDK, a reference open source ASIC implementation with dogm flow was created, and is known as open lane. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/19.JPG)
+
+Openlane is free to use, open-source, comes with the apache 2.0 liscence, and has a public github repo. Started as an an Open-Surce Flow for a True Open Source Tape-Out Experiment. There is an open PDK, open RTL and open EDA.
+
+He main goal for open lane is to create clean GDSII, no lvs drc and riming violations, without human intervention.
+
+OpenLANE can be used to harden macros and chips. 
+
+OpenLANE flow can be operated either autonomous or interactively. 
+
+One of openlane features include design space exploration, where the best set of flow configurations can be found. 
+
+#### OpenLANE detailed ASIC design flow
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/20.JPG)
+
+The ASIC lane flow has several steps, starts with the design RTL and ends with the GDSII layout. Flow starts with RTL synthesis, using yosys with constraints which translates the design intop logic circuit. The circuit can be optimized and then mapped using abc, which must be guided by the optimization, which comes in the form of abc scripts, Open lane comes with several abc scripts, referred to as syntesis strategies. Different designs can use different strategies to achieve objectives, for that we have the synthesis exploration.
+
+* Synthesis Exploration and Design Exploration
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/21.JPG)
+
+The synthesis exploration is used to generate reports that shows how the design delay and area is affected by the strategy. We can pick the best strategy based on this exploration. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/22.JPG)
+
+Openlane also has design exploration utility which can be used to sweep the design configurations and generates a report similar to the one shown above, showing different design matrix, which is also useful to find the best configuration for a design. Deisgn exploration can alkso be used for regression testing (CI).
+
+* DFT
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/23.JPG)
+
+After synthesis, we need to perform DFT so our design will be ready for testing after fabrication. This step uses the open source project known as fault. Within the DFT step, the design undergoes scan insertion, Automatic Test Pattern Generation (ATPG), Test Patterns Compaction, Fault Coverage, Fault Simulation. Essentially, additional logics will be added which allows testing after fabrication. 
+
+* Physical Implementation
+
+This stage is also known as place and route, wherein the tool performs, floor/power planning. End coupling capacitors and tap cells insertion, global and detailed placement, post placement optimization, clock tree synthesis, and global routing and detailed routing. 
+
+* Die Insertion
+
+During physical implementation, we have die insertion, this step is required to handle the antenna rule violations.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/24.JPG)
+
+Antenna rule violation refers to a rule that is necessary in order to avoid antenna effect. Antenna effect refers to when metal wire segments are fabricated, they can act as an antenna if the wire segment length is too long. Reactive ion etching can cause charges to accumulate on the wire, and this charge will may cause the transistor gates to be damaged during fabrication. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/25.JPG)
+
+One way to handle this is by performing bridging which attaches a higher layer to act as an intermediary, which requires router awareness. Second method is by adding an antenna diode cell to leak a way the accumulated charges.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/26.JPG)
+
+For open lane, a different method is used, where a fake antenna diode is added next to ecery cell input after placement. The antenna checker is run on the routed layout. If the checker reports a violation on the cell input pin, the Fake diode cell will be replaced by a a real one. 
+
+* LEC (Logic Equivalence Check)
+
+Since we perform optimization, which involves some transformation during physical implementation, we need to check the logic equivalence between the netlist using yosys, to make sur e the design is functionally equivalent. Whenever the netlist is modified, such as during CTS or Post placement, verification needs to be performed. 
+
+* Signoff
+
+This step involves Static Timing Analysis (STA), Design Rule Checking (DRC), and Layout versus Schematic (LVS). 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/27.JPG)
+
+STA involves timing reports to check violations in timing paths. 
+
+Physical verification involves DRC and LVS, Magic is used for DRC and SPICE Extraction from layout, Magic and Netgen are used for LVS, where extracted PSICE by Magic vs verilog netlist are used. 
+
+### Lab Day 15
+
+#### OpenLANE Directory structure in detail
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/51.JPG)
+
+> Within the openlan working directory, we have the openlane directory which we will work in ,aand the pdk directory which contains all the skywater pdk, open pdks and sky130A. The skywater pdk has all the psk related files, which has the timing libraries, the lef files, the tech lefs, etc. The reason of having the open pdks consists of scripts and files that converts the foundry level pdks to be compatible with the open source eda, such as Magic or Netgen. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/52.JPG)
+
+> Sky130A is the pdk which has been made compatible with the open source environment. Within this directory we have libs.ref and libs.tech.  Libs.ref contains all the process specific files, while libs.tech contains tool specific files. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/53.JPG)
+
+> here we can see all the timing libs we will be using. 
+
+#### Design Preparation Step
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/54.JPG)
+
+> to run the complete flow, we run the flow.tcl command without any switches
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/55.JPG)
+
+> We need to require the packages every time we run
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/56.JPG)
+
+> These are the designs that we have
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/57.JPG)
+
+> src hold the verilog files which will be used as well as sdc information
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/58.JPG)
+
+> config.tcl bypasses any configurations that were done in default flow
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/59.JPG)
+
+> error encountered during prep command
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/60.JPG)
+
+> we must use the command make mmount to invoke openlane 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/61.JPG)
+
+> design setup stage performed 
+
+#### Review files after design prep and run synthesis
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/62.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/63.JPG)
+
+> now we have the runs directory created
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/64.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/65.JPG)
+
+> information within the .lef generated
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/66.JPG)
+
+> config.tcl shows all the default directories taken by the run
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/67.JPG)
+
+> cmds.log shows all the command used
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/68.JPG)
+
+> running synthesis using run_synthesis command 
+
+#### OpenLANE Project Git Link Description
+
+https://github.com/efabless/OpenLane
+
+> we can see all the info on OpenLane in the github linked above
+
+#### Steps to characterize synthesis results
+
+> STA, synthesis and abc has been performed
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/69.JPG)
+
+> chip are for module
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/70.JPG)
+
+> The flop ratio is the number of D flip flops against total number of cells, flop ratio would be 1613/14876 x 100= 10.84
+
+ ![](https://github.com/YishenKuma/sd_training/blob/main/day15/71.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/72.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/73.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day15/74.JPG)
+
+> reports generated
+
