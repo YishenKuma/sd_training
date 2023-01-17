@@ -74,6 +74,10 @@ Content of training:
 > - [Lecture 15 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-15)
 > - [Lab 15](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-15)
 
+- [Day_16: Understand importance of good floorplan vs bad floor plan and introduction to library cells](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_16-understand-importance-of-good-floorplan-vs-bad-floor-plan-and-introduction-to-library-cells)
+
+> - [Lecture 16 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-16)
+> - [Lab 16](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-16)
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
 
