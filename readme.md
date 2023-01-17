@@ -3385,3 +3385,308 @@ https://github.com/efabless/OpenLane
 
 > reports generated
 
+## **Day_16: Understand importance of good floorplan vs bad floor plan and introduction to library cells**
+
+### Lecture Day 16
+
+#### Utilization factor and aspect ratio
+
+* Define width and height of core and die
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/1.JPG)
+
+We begin with the netlist that defines the connectivity between all the cells, the dimensions of the chip is dependant on the dimensions of the logic gates, 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/2.JPG)
+
+The logic gates will be represented as cells with respective dimensions
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/3.JPG)
+
+With these dimensions we can calculate the area occupied by the netlist on the IC chip
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/4.JPG)
+
+If the logic completely utilizes the area available on the chip, then we have 100% utilization, or a utilization of 1.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/5.JPG)
+
+The aspect ratio signifies the shape of the chip, if the ratio is 1, then the chip shape is square.
+
+#### Concept of pre-placed cells
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/6.JPG)
+
+Preplace cells refer to cells which are implemented once and can be instantiated multiple times onto one netlist, as this is part of the top-level netlist, such us IP’s memory, comparator, etc. The placement of these cells have to be done before placement and routing. The arrangement of these cells on chip is referred as floorplannning, based on user defined locations. 
+
+Automated placement and routing tools will place the remaining logical cells in the design onto chip. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/7.JPG)
+
+Preplace cells can also refer to blackboxes, where the netlist has been separated out and becomes invisible to the top netlist, so the user can instantiate the block multiple times while only implemented once.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/8.JPG)
+
+The locations of the preplace cells must be well defined.
+
+#### De-coupling capacitors
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/9.JPG)
+
+In any circuit, whenever there is switching activity occurring, the circuit demands switching current. Whenever there is switching, there will be a capacitive discharge occurring, and the discharge current should be handled well by the power supply coupling.  However, due to the presence of Rdd and Ldd, there will be a voltage drop, so the value of voltage will be slightly lower than the main supply. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/10.JPG)
+
+The value of the reduced voltage must be within the noise margin range so that the transition of logic to be detected. For signal to be considered as logic 1 ort 0, it should be in the NMl and NMh ranges respectively. If the value of our voltage drop is too great, our signal could fall into the undefined region which would not be good, so this is where we use the decoupling capacitors. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/11.JPG)
+
+The decoupling capacitor connected in parallel with the circuit, provides current to the circuit during switching activity. The RLL network will be used to replenish the charge into the decoupling capacitor when there is no switching activity. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/12.JPG)
+
+Placement of decoupling capacitors.
+
+#### Power Planning
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/13.JPG)
+
+For sending signals between blackboxes, we cannot always be having decoupling capacitors to be inserted to handle the potential voltage drop for the switching activity.  As the power supply is coming from one source, there is a change of the signal having aground bounce or a voltage sloop.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/14.JPG)
+
+How we handle this is by having multiple power source lines, this way, whenever there is switching activity, the power will be taken from the nearest power line. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/15.JPG)
+
+This is what is known as power grid mesh that is used in the power planning stage.
+
+#### Pin placement and logical cell placement blockage
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/16.JPG)
+
+The connectivity information between the gates is coded using the VHDL/Verilog language and sis called as the netlist. The above circuit shown has 4 input pins and 4 output pins, 2 input clk ports and 1 output clk port. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/17.JPG)
+
+Pin placement is dependent on the functionality of the design, backend team will be responsible for this. Clock ports are also larger due to design being driven by these clcock paths, so we need these paths to have as low resistance as possible. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/18.JPG)
+
+There needs to be a logical cell placement blockage, so that no cells are inserted and there will be no overlaps between the pins. 
+
+#### Netlist binding and initial place design
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/19.JPG)
+
+We need to bind the netlist of the physical cells, the cells will have a real view of a box with a specific width and height. These boxes will be available in a library file, having the widths and heights of the cells, as well as other details such as delay or required information, as well as the flavor of the cells. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/20.JPG)
+
+During placement stage we must ensure that the area used for the blackboxes and deccaps cells do not have any cells inserted and cause overlaps. The placement needs to be timing conscious as well to not make the routing long.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/21.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/22.JPG)
+
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/23.JPG)
+
+We will then need to optimize this placement. We do this through wire length and capacitance estimation. One way is through signal integrity through signal repeaters, which are buffers that recondition old signal and reproduces the signal to the following stage to maintain signal integrity, however this comes at the cost increase area. 
+
+#### Need for libraries and characterization
+
+Logic synthesis is needed to convert the functionality in terms of RTL into functionality in terms of hardware. The output will be an arrangement of gates that will represent the original functionality. Then we perform floorplanning where the shape of the design is made based on user specification asnd the placement of pre-placed cells. Then we perform placement such that the placement of the cells is meeting the intended timing of the design. Next we perform CTS, to have no timing issues for the in terms of the clock endpoints. Lastly, we perform routing, where the routing needs to take into factor the properties of the cells. Then we have STA, in which we do timing analysis, and checks for hold and setup timings. 
+
+The common thing in all these stages are the gates. This is where the library calculation is step is very important. The gates must be modelled such that the tool can understand what the gate is and the timing characteristic of the gates. 
+
+#### Inputs for cell design flow
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/24.JPG)
+
+The library holds all the standard cells and information with different functionality, threshold voltages, sizes. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/25.JPG)
+
+> design rules
+
+The inputs for the cell design flow are the PDKS, DRC and LVS rules, spice models, library and user defined specs. The rules have been tested and set based on the foundrys. There will be more than thousands of design rules that the cell must follow. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/26.JPG)
+
+> spice models given by foundry
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/27.JPG)
+
+> library and user defined specs incled cell height, supply voltage, metal layers, drawn gate length and pin location.
+
+The design stage involves 3 stages, circuit design, layout design and characterization. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/28.JPG)
+
+Circuit design involves implementing the function, and then model the transistors to meet the library requirements which are based on spice simulations. Then once we have the values of W/L of the mos, we implement the values in the layout. The typical output we get from circuit design is the CDL, which is the circuit description language. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/29.JPG)
+
+The first step in layout design is to get the function implemented through a pmos and nmos transistors, then get the pmos and nmos network graphs. 
+
+#### Layout Design Step
+
+The art of layout is the euler’s path and the stick diagram
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/30.JPG)
+
+After you get the pmos and nmos network path, you open the euler’s path. The euler’s path is basically a path that has only been traced once.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/31.JPG)
+
+The next step would be to draw a stick diagram of it. A C E F D B are nothing but the inputs, the connections are made being mentioned by the circuit. This will detail the connec6ions for the source and drains for the mos transistors of the input pins. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/32.JPG)
+
+Then we convert this stick diagram into a layout based on the drc rules given by the foundry, and the top level specifications by the user.  
+
+Lastly we extract the parasitics of this layout and characterize it in terms of timing. The characterization is helpful to get the timing, noise and power information. 
+
+The final outputs of the cell design flow will be the CDL (circuit description langauge), gdsii, lef, extracted spice netlist (.cir) , Timing, noise, power .libs, function
+
+#### Typical characterization flow
+
+Now we have our outputs in the terms of a extracted spice netlist and spice models. 
+
+Firstly we read in the spice models and the tech file from the layout.
+
+The second step is to read in the extracted spice netlist. 
+
+The third step is to recognize the behaviour of the buffer.
+
+The fourth step is to read in the subcircuit of the inverter.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/33.JPG)
+
+Then you need to attach the necessary power sources.
+
+The sixth step is to apply the stimulus, and the output capacitance is the seventh step.
+
+The eight step is to provide the simulation command. 
+
+The next step is to feed in all the inputs for the previous 8 steps in the form of a config file through the characterization software GUNA. This software will generate the timing, noise, power .libs, function. 
+
+The classification of .libs is based on the timing, noise and power characterization. 
+
+#### Timing threshold definitions
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/34.JPG)
+
+These are the variables related top any waveform seen. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/35.JPG)
+
+Slew low rise thr refers to the defined value of the graph closer to zero, typically at 20%. But this is not enough to calculate the slew, you need the slew high rise thr as well. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/36.JPG)
+
+For the high rise thr you take the value of 20% from the top. So to get the slew, you will us ethese to points over the timing difference. 
+
+Similar definition applies for the falling waveform.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/37.JPG)
+
+We also have thresholds for the delays. In rise thr refers to the best defined point to calculate the delay. Similarly we have the out rise thr at the 50% mark, if we want to calculate the delay of the cell, we need to take the time period between the 2 points. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/38.JPG)
+
+Similarly, for a fall waveform, the definition applies the same but for the fall waveform.
+
+#### Propagation delay and transition delay
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/39.JPG)
+
+If we want to calculate the delay, we only need to subtract out minus in, the time at the out thr minus the time at the in thr. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/40.JPG)
+
+For an example shown above, it is very easy to get the delay by subtracting the time. There will exist a problem if there is a moment of the threshold.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/41.JPG)
+
+If by chance the threshold moves, and the output moves and becomes before the input, then our delay will become a negative value, qhixh should not be seen, and would be a result of poor choice of threshold point. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/42.JPG)
+
+Another reason we might get a negative delay is if we get a waveform as above. Form the slew of the input waveform, we can undertsand that the delays on the input wires are quite high. Even with the proper choice of thr point, its will still give a value of negative delay, so the deisgn of the circuit is also very important. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/43.JPG)
+
+For transition time, we need to subtract the time of slew high rise thr minus the time of slew low rise thr for rise waveform. The similar case applies for the fall waveform, using the slew low and high for fall. 
+
+### Lab Day 16
+
+#### Steps to run floorplan using OpenLANE
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/101.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/102.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/103.JPG)
+
+Within the configuration directory, there will be a README.md file which has the switches of the tool to use during stages. These switches are set in the .tcl files in the configuration directory. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/104.JPG)
+
+These are the system default settings, which is the lowest priority for the tool, the highest priority is in the design directory, the config.tcl and the pdk variant config.tcl. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/105.JPG)
+
+We run the floorplan stage using “run_floorplan”
+
+#### Review floorplan files and steps to view floorplan
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/106.JPG)
+
+We can see our variable for the core utilization is set to 35.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/107.JPG)
+
+The highest priority file that sets this value over the other file is the pdk variant config.tcl	
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/108.JPG)
+
+To view the floorplan, we must use the .def file within results directory. We can see the coordinates of the core area specified. If we divide the numbers by 1000, we will have the area of the chip in micrometers. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/109.JPG)
+
+We use the command “magic -T /Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130.tech lef read /Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/17-01_06-56/tmp/merged.lef def read /Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/17-01_06-56/results/floorplan/picorv32a.floorplan.def &”
+
+#### Review floorplan layout in Magic
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/109a.JPG)
+
+Hit s on the keyboard to select and hit v to maximize the design. Left click and right click to select a region. z and shift z to zoom in and zoom out.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/110.JPG)
+
+Here we can see the input pins 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/111.JPG)
+
+Hitting s key and checking the tkcon window, use the command “what” to see the cell information.
+
+The decap cells have been arranged along the side rows of the design as end cap cells. And there are are also tap cells meant to avoid the latch up conditions that occur in the cmos devices. The taps cells are placed of equal distance.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/112.JPG)
+
+The standard cells are placed at the bottom left corner of the design, it will only be placed during placement stage. 
+
+#### Congestion aware placement using RePlAce
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/114.JPG)
+
+We perform the placement using command “run_placement”. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/115.JPG)
+
+We look at the design after placement with the command “magic -T /Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130.tech lef read /Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/17-01_06-56/tmp/merged.lef def read /Desktop/work/tools/openlane_working_dir/openlane/designs/picorv32a/runs/17-01_06-56/results/placement/picorv32a.floorplan.def &”
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day16/113.JPG)
+
+All the std cells have been placed.
