@@ -3054,6 +3054,23 @@ Total hold slack – sum of the total negative hold slack paths, of the sum of a
 > using the command report_qor to get the value of wns, tns, whs, ths
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day14/113.JPG)
+ 
+Steps to use in dc shell for each timing lib file
+ 
+> set target_library {/nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/rvmyth/vsdpcvrd/resources/timing_libs/<timing_lib.db> /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/sky130RTLDesignAndSynthesisWorkshop/DC_WORKSHOP/lib/mew/VSDBabySoC/src/lib/avsddac.db /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/sky130RTLDesignAndSynthesisWorkshop/DC_WORKSHOP/lib/mew/VSDBabySoC/src/lib/avsdpll.db}
+	#change target and link library
+	
+> set link_library {* /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/rvmyth/vsdpcvrd/resources/timing_libs/<timing_lib.db> /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/sky130RTLDesignAndSynthesisWorkshop/DC_WORKSHOP/lib/mew/VSDBabySoC/src/lib/avsddac.db /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/sky130RTLDesignAndSynthesisWorkshop/DC_WORKSHOP/lib/mew/VSDBabySoC/src/lib/avsdpll.db}
+
+> read_file {mythcore_test.v avsd_pll_1v8.v avsddac.v clk_gate.v vsdbabysoc.v} -autoread -format verilog -top vsdbabysoc
+
+> source cons.tcl 
+
+> link
+
+> compile
+
+>report_qor #to get the WNS WHS THS
 
 > now we read in all the converted libs to check the values for the different PVT corners
 
