@@ -636,7 +636,7 @@ Counter_opt2:
 
 > at the output, we have inverted inputs !2!1!0, fed into a nor gate with an inverted C pin, thus the inputs are 2!1!0 ~= 3[3'b100]
 
-</summary>	
+</details>		
 	
 ## **Day_4: Timing, Hierarchical vs Flat synthesis, and Efficient flop coding style** 
 <details><summary> Lecture 4 & VSD-IAT recordining Topics </summary>
