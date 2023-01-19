@@ -3745,7 +3745,7 @@ All the std cells have been placed.
 
 <details><summary>  Lecture Day 7  </summary>
 
-#### SPICE deck creation for CMOS inverter
+<details><summary> SPICE deck creation for CMOS inverter </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/1.JPG)
 
@@ -3779,7 +3779,9 @@ The point where the vin=vout is when both transistors are in saturation region, 
 
 When the vin=vout, the gate voltage is equal the the drain voltage, so the vgs will be very little compared to threshold voltage. At the point where vgs=vds, the currents idsn and idsp will be the same, just flowing in opposite directions. 
 
-#### Static and dynamic simulation of CMOS inverter
+</details>
+
+<details><summary> Static and dynamic simulation of CMOS inverter </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/9.JPG)
 
@@ -3799,9 +3801,11 @@ The rise delay calculation is based on the 50% point,  the difference in time be
 
 For the design with wp/lp=wn/ln, we have the rise delay and fall delay measured a shown above. 
 
-#### CMOS Fabrication process
+</details>
 
-##### Creating active regions
+<details><summary> CMOS Fabrication process </summary>
+
+<details><summary> Creating active regions </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/14.JPG)
 
@@ -3819,7 +3823,9 @@ The first step is the 16-mask CMOS fabrication process is selecting a substrate 
 
 Then we can grow the oxides of the exposed areas of the SiO2, while the are under the Si3N4 is protected from growing during the oxidation furnace. This process is known as LOCOS, and the areas created is known as bird beaks. Then the Si3N4 is striped away and that is how we get the isolation regions and active regions.  
 
-##### Formation of N-Well and P-Well
+</details>
+
+<details><summary> Formation of N-Well and P-Well </summary>
 
 We need to form the n-well and p-well one at a time.
 
@@ -3841,7 +3847,9 @@ We do the same for the next same now to create the active n well region using io
 
 Next we take the structure into a driving furnace for a long time so that the boron and phosphorus diffusion will be driven in further into the p-substrate so the wells are formed clearly. In the n-well we will create a p-mos transitor, and in the p-well we create the n-mos transisitor.
 
-##### Formation of gate terminal
+</details>
+
+<details><summary> Formation of gate terminal </summary>
 
 Gate by far is the most important terminal for the mos devices because that is what defines the threshold voltage, which is what defines the turn on voltage of the gates. 
 
@@ -3885,7 +3893,9 @@ Then we add the photoresist layer removed through a mask to create the gate patt
 
 Then the exposed areas of polysilicon can be etched away. And once the resist is removed as well, what is left is seen above. Now we have the low resistance polysilicon gate formed above the p and n well. 
 
-##### Lightly doped drain (LDD) formation
+</details>
+
+<details><summary> Lightly doped drain (LDD) formation </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/37.JPG)
 
@@ -3913,7 +3923,9 @@ Next we do the same for the N well, in creating the lightly doped P- regions.
 
 We also have to protect the newly created doped drains, as when we try to generate the actual source and drain, the doped drains structure might get disrupted. So to do this we create some side wall spaces through anisotropic etching, which is a directional etching, so everything will be etched off except for the side walls, creating the side wall spacers. The further implantation will only be impacted on the exposed regions beside the side wall spacers. 
 
-##### source and drain formation 
+</details>
+
+<details><summary>  source and drain formation  </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/42.JPG)
 
@@ -3933,7 +3945,7 @@ Then we do the same for the p-mos as well.
 
 Then we heat the structure in the driver furnace, exposing to high temperature annealing, to cause the diffusion to go even deeper into the substrate, forming the source and drains.
 
-##### Local interconnect formation 
+<details><summary> Local interconnect formation  </summary>
 
 The contacts are very important for user to control the characteristic of the mos devices.
 
@@ -3961,7 +3973,9 @@ Then we heat this structure to cause a reaction and create the contact between t
 
 Through the lithography process and the etching process using RCA cleaning, we leave the TiSi internal connects and the TiN local interconnects.  
 
-##### Higher metal level formation
+</details>
+
+<details><summary> Higher metal level formation </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/54.JPG)
 
@@ -4015,9 +4029,15 @@ Through the similar steps, we bring the metal to the higher layers through the T
 
 </details>
 
+</details>
+	
+</details>
+	
+</details>
+
 <details><summary>  Lab Day 17 </summary>
 
-#### IO Placer Revision
+<details><summary> IO Placer Revision </summary>
 
 We will be using new .lib files to perform the post layout simulation, post characterizing our sample cell, and plugging this cell into the openlane flow for the picorv32a core. 
 
@@ -4039,7 +4059,9 @@ Now from the design, we can see, the placement method has been changed to being 
 
 This is the way the changes are made, by resetting the variables and running the flow again. 
 
-#### Lab steps to git clone vsdstdcelldesign
+</details>
+
+<details><summary> Lab steps to git clone vsdstdcelldesign </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/104.JPG)
 
@@ -4049,7 +4071,9 @@ Now we will be cloning files so that we can have the lib files that will allow u
 
 We will first open up the mag file and see the different layers that is used in the building of the inverter. We will be doing the spice extraction as well as the post synthesis spice simulation. We need to have the magic tech file before we can open the mac file. We use the command magic command to view the layout. 
 
-#### Lab introduction to Sky130 basic layers layout and LEF using inverter
+</details>
+
+<details><summary> Lab introduction to Sky130 basic layers layout and LEF using inverter </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/106.JPG)
 
@@ -4073,7 +4097,9 @@ https://github.com/nickson-jose/vsdstdcelldesign
 
 The above site will have a detailed explanation on the technology LEF of the inverter, and how to create a std cell through magic, and building a CMOS step by step.
 
-#### Lab steps to create std cell layout and extract spice netlist
+</details>
+
+<details><summary>  Lab steps to create std cell layout and extract spice netlist </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/111.JPG)
 
@@ -4087,7 +4113,9 @@ The above site will have a detailed explanation on the technology LEF of the inv
 
 To perform the spice extraction, we need to create an extraction file, using command “extract all”. Then to create the spice file, we use the command “ext2spice cthresh o rthresh 0” and “ext2spice”
 
-#### Lab steps to create final SPICE deck using Sky130 tech
+</details>
+
+<details><summary> Lab steps to create final SPICE deck using Sky130 tech </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/115.JPG)
 
@@ -4099,7 +4127,9 @@ The generated spice file ahowing the pmos and nmos, with the characterization de
 
 We need to edit the scale in the spile code to reflect the value in the magic tool. We must also include the pmos and nmos lib files. And we need to comment out the subckt and .end line because we want to include the transient analysis controls as well. Supply voltages needs to be defined. The input pulse must also be specified, and the specification for the transient analysis.  The pmos and nmos models must be renamed accordingly as well in order for the paremetres to be correctly taken from the model lib file.  With this the spice deck is final, and we use the command ngspice to run the spice simulation.
 
-#### Lab steps to characterize inverter using sky130 model files
+</details>
+
+<details><summary> Lab steps to characterize inverter using sky130 model files </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/118.JPG)
 
@@ -4129,7 +4159,10 @@ The cell rise and fall delay is calculated based on the 50% point. The cell rise
 
 The cell fall delay is -0.00389ns.
 
-#### Lab introduction to Magic tool options and DRC rules
+</details>
+
+
+<details><summary> Lab introduction to Magic tool options and DRC rules </summary>
 
 There are details for using magic in the website https://opencircuitdesign.com/magic/
 
@@ -4139,7 +4172,9 @@ CIF refers to one of the common output data formats. Stands for caltec intermedi
 
 The syntax for DRC rules are available in the DRC section. The basic DRC rules are known as edge-based rules. They work by finding the edge or boundary between 2 layers and checking the area in front of or behind of anything that is violating the design rule. 
 
-#### Lab introduction to Sky130 pdk's and steps to download labs
+</details>
+
+<details><summary> Lab introduction to Sky130 pdk's and steps to download labs </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/127.JPG)
 
@@ -4149,7 +4184,9 @@ In order to import the magic layouts for the exercise, we use the command wget f
 
 We run magic using the “magic -d XR” command
 
-#### Lab introduction to Magic and steps to load Sky130 tech-rules
+</details>
+
+<details><summary> Lab introduction to Magic and steps to load Sky130 tech-rules </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/129.JPG)
 
@@ -4163,7 +4200,9 @@ Open the metal3 file through the file tab. We can see a few independent layout g
 
 One of the rules that must be adhered by magic for metal 3 is that via2 must be enclosed by metal 3 by at least 0.065 microns. To see this visually happening in magic, draw a square and selecting the M3contact on the layer panel by hovering an pressing the p key, then with the cursor box around the area, type the command “cif see VIA2”, we will see the via cuts within the M3 contact, they are created based on the rules in the tech file. The distance between the via cut and the edge is will never be smaller than 0.065 as specified by the rules, thus there will be no drc violation. 
 
-#### Lab exercise to fix poly.9 error in Sky130 tech-file
+</details>
+
+<details><summary> Lab exercise to fix poly.9 error in Sky130 tech-file </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day17/134.JPG)
 
@@ -4181,11 +4220,21 @@ We need to edit the tech file appropriately based on the poly.9 key. No rule was
 
 We use the command “tech load sky130A.tech” to automatically read in the newly modified tech rules. Then run command “drc check”, now the spacing rule has been applied and the violation is showing. 
 
-#### Lab exercise to implement poly resistor spacing to diff and tap
+</details>
 
-#### Lab challenge exercise to describe DRC error as geometrical construct
+<details><summary> Lab exercise to implement poly resistor spacing to diff and tap </summary>
 
-#### Lab challenge to find missing or incorrect rules and fix them
+</details>
 
+<details><summary> Lab challenge exercise to describe DRC error as geometrical construct </summary>
+
+</details>
+
+<details><summary> Lab challenge to find missing or incorrect rules and fix them </summary>
+	
+</details>
+
+</details>
+	
 </details>
 
