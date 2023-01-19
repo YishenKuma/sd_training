@@ -79,9 +79,9 @@ Content of training:
 > - [Lecture 16 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-16)
 > - [Lab 16](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-16)
 
-## **Day_0 : System/Tool Setup Check. GitHub ID creation** 
+## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
-### Lecture Topics
+<details><summary>  ### Lecture Topics  </summary>
 
 * Chip and Package
 <!---
@@ -133,6 +133,8 @@ Compiler: reads the complete source program written in high-level language as a 
 
 Assembler: translate the program written in assembly language into machine code represented by binary code
 
+</details>	
+	
 ### Lab session
 
 #### Steps
