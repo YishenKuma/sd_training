@@ -3790,7 +3790,7 @@ All the std cells have been placed.
 	
 ## **Day_17: Design and characterise one library cell using Layout tool and spice simulator**
 
-<details><summary>  ### Lecture Day 7  </summary>
+<details><summary>  Lecture Day 7  </summary>
 
 #### SPICE deck creation for CMOS inverter
 
