@@ -79,6 +79,12 @@ Content of training:
 > - [Lecture 16 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-16)
 > - [Lab 16](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-16)
 
+- [Day_17: Design and characterise one library cell using Layout tool and spice simulator]()
+
+> - [Lecture 17 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-17)
+> - [Lab 17](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-17)
+
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
@@ -3784,7 +3790,7 @@ All the std cells have been placed.
 	
 ## **Day_17: Design and characterise one library cell using Layout tool and spice simulator**
 
-### Lecture Day 7
+<details><summary>  ### Lecture Day 7  </summary>
 
 #### SPICE deck creation for CMOS inverter
 
