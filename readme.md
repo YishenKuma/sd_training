@@ -81,7 +81,7 @@ Content of training:
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
-<details><summary>  ### Lecture Topics  </summary>
+<details><summary> Lecture Topics  </summary>
 
 * Chip and Package
 <!---
