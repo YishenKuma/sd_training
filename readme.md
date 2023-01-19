@@ -2,87 +2,40 @@
 Content of training:
 - [Day_0 : System/Tool Setup Check. GitHub ID creation](https://github.com/YishenKuma/sd_training/edit/main/readme.md#day_0--systemtool-setup-check-github-id-creation)
 
-> - [Lecture_0](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-topics)
-> - [Lab_0](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-session)
-
 - [Day_1 : Introduction to iverilog design test bench](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_1--introduction-to-iverilog-design-test-bench)
-
-> - [Lecture_1 + VSD-IAT recording topics](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsd-iat-recordining-topics)
-> - [Lab_1](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day_1)
 
 - [Day_2: Timing, Hierarchical vs Flat synthesis, and Efficient flop coding style](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_2--timing-hierarchical-vs-flat-synthesis-and-efficient-flop-coding-style)
 
-> - [Lecture 2 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsd-iat-recordining-topics-1)
-> - [Lab 2](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day_2)
-
 - [Day_3: Combinational and sequential optimizations](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_3--combinational-and-sequential-optimizations)
 
-> - [Lecture 3 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsd-iat-recordining-topics-2)
-> - [Lab 3](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day_3)
-
 - [Day_4: GLS/Blocking vs Non blocking Assignments and synthesis simulation mismatch](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_4-timing-hierarchical-vs-flat-synthesis-and-efficient-flop-coding-style)
-
-> - [Lecture 4+ VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-4--vsd-iat-recordining-topics)
-> - [Lab 4](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day_4)
 
 - [Day_5: DFT](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_5--dft)
 
 - [Day_6: Introduction on logic synthesis](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_6--introduction-on-logic-synthesis)
 
-> - [Lecture 6 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics)
-> - [Lab 6](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day_6)
-
 - [Day_7: Basic SDC Constraints](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_7--basic-sdc-constraints)
-
-> - [Lecture 7 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-1)
-> - [Lab 7](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-7)
 
 - [Day_8: Advanced SDC Constraints](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_8--advanced-sdc-constraints)
 
-> - [Lecture 8 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-2)
-> - [Lab 8](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-8)
-
 - [Day_9: Optimization in synthesis](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_9--optimizations-in-synthesis)
 
-> - [Lecture 9 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-3)
-> - [Lab 9](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-9)
-
 - [Day_10: QOR](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_10--qor)
-
-> - [Lecture 10 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture--vsdiat-recording-topics-4)
-> - [Lab 10](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-10)
 
 - [Day_11: Introduction to BabySoC](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_11--introduction-to-babysoc)
 
 - [Day_12: BabySoC Modelling](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_12-babysoc-modelling-)
 
-> - [Lecture 12](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-12)
-> - [Lab 12](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-12)
-
 - [Day_13: Post Synthesis Simulation](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_13-post-synthesis-simulation)
-
-> - [Lecture 13](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-13)
-> - [Lab 13](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-13)
 
 - [Day_14: Post Synthesis Simulation](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_14-synopsys-dc-and-timing-analysis)
 
-> - [Lecture 14](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-14)
-> - [Lab 14](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-14)
-
 - [Day_15: Inception of EDA and PDK](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_15-inception-of-eda-and-pdk)
-
-> - [Lecture 15 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-15)
-> - [Lab 15](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-15)
 
 - [Day_16: Understand importance of good floorplan vs bad floor plan and introduction to library cells](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_16-understand-importance-of-good-floorplan-vs-bad-floor-plan-and-introduction-to-library-cells)
 
-> - [Lecture 16 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-16)
-> - [Lab 16](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-16)
+- [Day_17: Design and characterise one library cell using Layout tool and spice simulator](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_17-design-and-characterise-one-library-cell-using-layout-tool-and-spice-simulator)
 
-- [Day_17: Design and characterise one library cell using Layout tool and spice simulator]()
-
-> - [Lecture 17 + VSDIAT recordings](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lecture-day-17)
-> - [Lab 17](https://github.com/YishenKuma/sd_training/blob/main/readme.md#lab-day-17)
 
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
