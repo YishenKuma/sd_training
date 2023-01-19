@@ -756,7 +756,7 @@ Sequential and combinational logics should be kept separate
 
 </details>									     
 									     
-### Lab Day_4
+<details><summary> Lab Day_4 </summary>
 #### GLS and Synth Sim Mismatch
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day4/10.jpg)
@@ -813,7 +813,11 @@ there difference in the simulation clearly shows the synthesis simulation mismat
 
 this can be solved by rearranging the order of the statements, or by using nonblocking statements
 
+</details>	
+	
 ## **Day_5 : DFT** 
+	
+<details><summary> Lecture 5 </summary>	
 
 #### Testability
 
@@ -1055,9 +1059,11 @@ Steps to perform basic scan-in and scan-out:
 
 > where synopsys-DFT comes into play
 
+</details>
+	
 ## **Day_6 : Introduction on logic synthesis**
 
-### Lecture + VSDIAT recording topics
+<details><summary> Lecture + VSDIAT recording topics </summary>
 
 ##### takeaway from RTL course
 
@@ -1215,7 +1221,10 @@ Excecutes command for each element in the collection , similar to list, but retu
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day6/12.jpg)
 
-### Lab Day_6
+</details>
+	
+<details><summary> Lab Day_6 </summary>
+	
 #### Invoking DC basic setup
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day6/13.jpg)
@@ -1374,9 +1383,11 @@ One advantage that DC flexibility offers is that DC will pick the .synopsys_dc.s
 
 > Usage of foreach_in_collection 
  
+</details>
+	
 ## **Day_7 : Basic SDC Constraints**
 
-### Lecture + VSDIAT recording topics
+<details><summary>  Lecture + VSDIAT recording topics </summary>
 
 #### Intro to STA
 
@@ -1572,9 +1583,11 @@ The tool can get this data from the lib file as well.
 
 This info present in the .lib tells the tool what to do for setup calculation during specific egdes.
 
-### Lab day 7
+</details>
+	
+<details><summary> Lab day 7 </summary>
 
-#### Querying the properties of .lib from dc shell
+Querying the properties of .lib from dc shell 
 
 * list_lib 
 
@@ -1654,9 +1667,11 @@ This info present in the .lib tells the tool what to do for setup calculation du
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day7/44.jpg)
 
-## **Day_8 : Advanced SDC Constraints**
-
-### Lecture + VSDIAT recording topics
+</details>
+	
+## **Day_8 : Advanced SDC Constraints** 
+ 
+<details><summary> Lecture + VSDIAT recording topics </summary>
 
 #### Clock Tree Modelling - Uncertainty
 
@@ -1769,8 +1784,10 @@ If we model an input transition, this transition will be a fixed transition irre
 
 For top level primary IOs, we should use set input transition. For module level IOs, we should use set driving cell. Set driving cell is preferable mainly because it is a more realistic approach. This is just the recommended approach, as long as we can model the real behaviour of the silicon during implementation, there is no issue.
 
-### Lab day 8
-
+</details>
+	
+<details><summary> Lab day 8 </summary>
+	
 #### get cells, get ports, get nets
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day8/5.jpg)
@@ -1969,9 +1986,11 @@ Our timing paths still need to factor in the input transitions as well
 
 > Similarly to before, once we perform synthesis with regard to the constraint set, the optimization is performed and the logic is squeezed. Now our timing is met in the timing path.
 
- ## **Day_9 : Optimizations in Synthesis**
+</details>
 
-### Lecture + VSDIAT recording topics
+## **Day_9 : Optimizations in Synthesis**
+
+<details><summary>  Lecture + VSDIAT recording topics </summary>
 
 Optimization goals are to:
 
@@ -2095,8 +2114,10 @@ For multi-cycle paths, where data is getting loaded once in every 2 or more cycl
 
 The way to handle is to run an additional set_multicycle_paths command but with the -hold < number of cycles - 1>. This will make it such that the launch edge is now shifted forward.  
 
-### Lab day 9
-
+</details>
+	
+<details><summary> Lab day 9 </summary>
+	
 #### Combinational Optimization 
 
 ##### opt_check1
@@ -2342,10 +2363,12 @@ Thus through constant propagation, we will reduce the logic to the use of 1 and 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day9/65.JPG)
 
 > as can be seen, the path is no longer violating, and this is because the capture edge has been shifted backward to 0ps instead of 4ps. 
- 
- ## **Day_10 : QOR**
 
-### Lecture + VSDIAT recording topics
+</details>
+
+ ## Day_10 : QOR**
+
+<details><summary>  ### Lecture + VSDIAT recording topics  </summary>
 
 #### Report Timing Generation and Analysis
 
@@ -2361,7 +2384,9 @@ For hold however, as it is a zero cycle check, there will be no period on the re
 
 The timing path report is run without options will show the timing path with the lowest slack, if any of the paths has a negative slack, meaning it is violating, then that path will be shown.
 
-### Lab day 10
+</details>
+	
+<details><summary> Lab day 10  </summary>
 
 #### Report Timing
 
@@ -2477,8 +2502,12 @@ There can be problems in loading the design into the tool due to human error tha
 
 > once we synthesize design with constrained transition, there will no longer be any violating paths. The synthesis tool has changed the buffer to have a higher drive strength to be able to meet the max trans value of the design.
 
+</details>
+	
 ## **Day_11 : Introduction to BabySOC**
 
+<details><summary> Lecture 11 </summary> 
+	
 ### What is SoC and Why SoC?
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day11/1.JPG)
@@ -2592,9 +2621,11 @@ DAC stands for digital to analog converter, it is a system that converts digital
 The modelling refers to the integration of the components together to create the babySoC.
 Some initial inputs will be fed into the design to make the PLL start generating the proper clock for the circuit. Then the clock signal will make the processor start executing instructions in its imem. Then the register will be filled with a value each cycle. These values will be used by dac core to provide the final output. 
 
+</details>
+	
  ## **Day_12: BabySoC Modelling **
 
-### Lecture Day 12
+<details><summary> ### Lecture Day 12 </summary>
 
 #### Modelling and simulation
 
@@ -2674,7 +2705,9 @@ We can either use the tool normally or through interactive mode, which allows de
 
 > beware of if-else usage as it is priority dependant, case statement behaviour may be more useful for the design
 
-### Lab Day 12
+</details>
+
+<details><summary> Lab Day 12 </summary>
 
 Compile the design using the command “vcs <verilog.v> <testbench.v>”
 
@@ -2800,9 +2833,11 @@ circuit chosen to be done is the half adder circuity, which is a simple and + or
  
 > waveform for design supports truth table, not all states shown however
 
+</details>
+	
 ## **Day_13: Post Synthesis Simulation**
 
-### Lecture Day 13
+<details><summary> Lecture Day 13 </summary>
 
 #### Pre synthesis Simulations vs Post synthesis simulation
 
@@ -2826,7 +2861,9 @@ RTL simulation or pre synthesis simulation does not take into account any delay 
 
 The purpose of having GLS is to boost the confidence of the design implementation and help verify dynamic circuit behaviour, which cant be done by static methods. 
 
-### Lab Day 13
+</details>
+	
+<details><summary> Lab Day 13 </summary>
 
 We will once again be using DC shell to synthesize the RTL code and then generating the output netlist to be used for the gate level simulation. 
 
@@ -2982,9 +3019,11 @@ keep in mind we have yet to set any constraints on the design, and any constrain
  
 Error encountered pending debug
 
+</details>
+	
 ## **Day_14: Synopsys DC and Timing Analysis**
 
-### Lecture Day 14
+<details><summary> Lecture Day 14 </summary>
 
 * Corners of PVT
 
@@ -3022,7 +3061,9 @@ Total negative slack – sum of the total negative path slacks, or the sum of al
 
 Total hold slack – sum of the total negative hold slack paths, of the sum of all WHS 
 
-### Lab Day 14
+</details>
+	
+<details><summary> Lab Day 14 </summary>
 
 #### Using Timing Libs for different PVT corners
 
@@ -3108,10 +3149,12 @@ sky130_fd_sc_hd__ss_n40C_1v35 | 7.80 | 0.00 | 10208.25 | 0.00
 sky130_fd_sc_hd__ss_n40C_1v40 | 6.57 | 0.00 | 8380.09 | 0.00
 sky130_fd_sc_hd__ss_n40C_1v44 | 5.87 | 0.00 | 7114.41 | 0.00
 sky130_fd_sc_hd__ss_n40C_1v76 | 1.90 | 0.00 | 1982.41 | 0.00
- 
+
+</details>	
+
 ## **Day_15: Inception of EDA and PDK**
 
-### Lecture Day 15
+<details><summary> Lecture Day 15 </summary>
 
 #### Introduction to QFN-48 Package, chip, pads, core, die and IPs
 
@@ -3321,7 +3364,9 @@ STA involves timing reports to check violations in timing paths.
 
 Physical verification involves DRC and LVS, Magic is used for DRC and SPICE Extraction from layout, Magic and Netgen are used for LVS, where extracted PSICE by Magic vs verilog netlist are used. 
 
-### Lab Day 15
+</details>
+	
+<details><summary> Lab Day 15 </summary>
 
 #### OpenLANE Directory structure in detail
 
@@ -3425,9 +3470,11 @@ https://github.com/efabless/OpenLane
 
 > reports generated
 
+</details>
+	
 ## **Day_16: Understand importance of good floorplan vs bad floor plan and introduction to library cells**
 
-### Lecture Day 16
+<details><summary> Lecture Day 16 </summary>
 
 #### Utilization factor and aspect ratio
 
@@ -3660,7 +3707,9 @@ Another reason we might get a negative delay is if we get a waveform as above. F
 
 For transition time, we need to subtract the time of slew high rise thr minus the time of slew low rise thr for rise waveform. The similar case applies for the fall waveform, using the slew low and high for fall. 
 
-### Lab Day 16
+</details>
+	
+<details><summary> Lab Day 16 </summary>
 
 #### Steps to run floorplan using OpenLANE
 
@@ -3730,3 +3779,5 @@ We look at the design after placement with the command “magic -T /Desktop/work
 ![](https://github.com/YishenKuma/sd_training/blob/main/day16/113.JPG)
 
 All the std cells have been placed.
+
+</details>
