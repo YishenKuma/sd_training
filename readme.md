@@ -3781,3 +3781,452 @@ We look at the design after placement with the command “magic -T /Desktop/work
 All the std cells have been placed.
 
 </details>
+	
+## **Day_17: Design and characterise one library cell using Layout tool and spice simulator**
+
+### Lecture Day 7
+
+#### SPICE deck creation for CMOS inverter
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/1.JPG)
+
+The first step in performing the spice simulations is to create the spice deck. The spice deck holds the connectivity information of the netlist and other information. We need to have specified for the spice deck the component connectivity, component values, node of the design, node names. .dc is used to perform the simulation, the command shown above is used to sweep the input voltage from 0 to 2.5 at steps of 0.05, and measure output voltage while we sweep the input voltage.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/2.JPG)
+
+ The final step is to describe ethe model file with the command .lib, with this command we create the model file which has all the information described in the top part.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/3.JPG)
+
+The spice model will look as shown above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/4.JPG)
+
+The simulated file waveform achieved in ngsipice using the commands [source “modelfile”.cir > run > setplot > dc1 > plot out vs in ]. This waveform is based on the modelling of the wn=wp=0.375u, ln=lp=0.25. The waveform shows the characteristics of the transistors. The waveform however can be noticed shifted slightly to the left. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/5.JPG)
+
+Now we run the waveform, but this time we do the modelling of wn= 0.375u, wp=0.9375u, ln=lp=0.25. The wp/lp =2.5 while the wn/ln = 1.5. Now we can see the graph is not shifted to the left and is in centred. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/6.JPG)
+
+The reason why the graph is not shifted for the voltage shifting of the design which the pmos width is larger than the design where the widths of nmos and pmos are the same, is because the cmos circuit constructed is more robust. One of the parameters that defines the cmos inverter robustness is the switching threshold, Vm, which is the voltage when Vin = Vout. For the case of wn/ln=wp/lp=1.5, our Vm is 0.9v. For the case of wn/ln=wp/lp=3.75, our Vm is 1.2v.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/7.JPG)
+
+The point where the vin=vout is when both transistors are in saturation region, where there is a high chance of leakage.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/8.JPG)
+
+When the vin=vout, the gate voltage is equal the the drain voltage, so the vgs will be very little compared to threshold voltage. At the point where vgs=vds, the currents idsn and idsp will be the same, just flowing in opposite directions. 
+
+#### Static and dynamic simulation of CMOS inverter
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/9.JPG)
+
+In order to do dynamic simulation, where we can analyse the rise and fall delay and how it varies with the switching threshold, we use a pulse wave as an input, and the simulation command will be a transient analysis. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/10.JPG)
+
+The pulse graph will start from 0, rises until 2.5 v, falls until 0, pulse width is 1 ns and complete cycle is 2ns
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/11.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/12.JPG)
+
+The rise delay calculation is based on the 50% point,  the difference in time between when the falling input crosses 50% and the point where rising output crosses 50%. The fall delay calculation is based on the 50% point,  the difference in time between when the rising input crosses 50% and the point where falling output crosses 50%.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/13.JPG)
+
+For the design with wp/lp=wn/ln, we have the rise delay and fall delay measured a shown above. 
+
+#### CMOS Fabrication process
+
+##### Creating active regions
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/14.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/15.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/16.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/17.JPG)
+
+The first step is the 16-mask CMOS fabrication process is selecting a substrate on which the complete design is fabricated onto. The most common type of substrate used is a p-type substrate with high resistivity and orientation <100>.  We also need to ensure substrate has a doping level that is lower than ‘well’ doping. Then we create small pockets in the substrate for the active regions for the transistors. We also need to create isolation between the pockets through the deposit of SiO2 layer on the substrate, and then a layer of Si3N4 on that. Then through the process of lithography, the regions for the pockets is created on the layer through photoresist mask, and etched away to leave the pockets. Then the photoresist is washed off to leave only the etched Si3N4 and the SiO2 layer remain.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/18.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/19.JPG)
+
+Then we can grow the oxides of the exposed areas of the SiO2, while the are under the Si3N4 is protected from growing during the oxidation furnace. This process is known as LOCOS, and the areas created is known as bird beaks. Then the Si3N4 is striped away and that is how we get the isolation regions and active regions.  
+
+##### Formation of N-Well and P-Well
+
+We need to form the n-well and p-well one at a time.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/20.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/21.JPG)
+
+We first deposit a layer of photoresist with a masking layer to expose the region which the p-well is formed first. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/22.JPG)
+
+Then we perform the doping process with boron on the exposed area to form the n-well, the reason for why boron is used is due to its bonding property with silicon top create holes. This process is known as ion implantation, the boron is diffused into the substrate, creating an active p area. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/24.JPG)
+
+We do the same for the next same now to create the active n well region using ion implantation with phosphorus. Phosphorus is used due to its bonding properties with silicon to create electrons. Now we have both the n and p wells formed. However the depth of the wells are not finalized yet. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/25.JPG)
+
+Next we take the structure into a driving furnace for a long time so that the boron and phosphorus diffusion will be driven in further into the p-substrate so the wells are formed clearly. In the n-well we will create a p-mos transitor, and in the p-well we create the n-mos transisitor.
+
+##### Formation of gate terminal
+
+Gate by far is the most important terminal for the mos devices because that is what defines the threshold voltage, which is what defines the turn on voltage of the gates. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/26.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/27.JPG)
+
+The Threshold voltage is very dependent on the doping concentration and the oxide capacitance, during the doping steps, we try to control these 2 factors so that we can control the threshold voltage.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/28.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/29.JPG)
+
+Through another masking step, we expose the previous p-well area to undergo diffusion again. We perform ion implantation of boron but this time with lower energy, so the diffusion will be just at the surface. We will use the doping concentration into getting the threshold voltage. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/30.JPG)
+
+We do the same thing on the other side for the n-well. Arsenic has the same elemental properties as phosphorus so it can be used. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/31.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/32.JPG)
+
+During the past few implantation stages, the oxide layer will become quite damaged, to handle this, we etch away the oxide and regrow the oxide layer. The thickness of the oxide can be grown based on the threshold voltage desired, since it is based on the oxide capacitance as well as the dopant concentration. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/33.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/33a.JPG)
+
+A thick polysilicon layer is deposited and dope it with some impurities, as the gate area is supposed to be of low resistance. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/34.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/35.JPG)
+
+Then we add the photoresist layer removed through a mask to create the gate patterns. The gate mask pattern is shown above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/35a.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/36.JPG)
+
+Then the exposed areas of polysilicon can be etched away. And once the resist is removed as well, what is left is seen above. Now we have the low resistance polysilicon gate formed above the p and n well. 
+
+##### Lightly doped drain (LDD) formation
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/37.JPG)
+
+Now we want to achieve the doping profiles a s shown above, for the N-well, we want to get a doping profile of P+,P-,N, we have the N-well have the pmos will be so we have the p type source and drain, which is the P+ doping profile, then want to have the lightly doped drain (LDD) for the P-, and we already have the N doping profile in the N diffused area above the N well. Similarlt the P-well, we want the N+, N-,P doping profile. 
+
+The reason why we want the P- and N- doping profiles between the doping profiles is because of 2 reasons, which are the hot electron effect and the short channel effect. 
+
+> Electric field, E = V/d 
+
+For the hot electron effect, when the device size has actually reduced, the general practice is to not redesign the design, so in the case if the electric field, the d decreases and the electric field increases, which can cause the high energy carriers to break the si-si bonds. The risen energy also may be too high that the 3.2eV barrier for Si conduction band and SiO2 conduction band may be crossed and into the oxide layer, which may cause liability. 
+
+For the short channel effect, when moving to a shorter device channel, the drain channel will begin to penetrate the channel area, making it difficult for the gate to control the source and drain current.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/38.JPG)
+
+First we create another photoresist layer and mask, exposing the Pwell and gate on the right, and since we are creating the N-mos, we need to perform the implantation using an N-type impurity, the concentration of implantation is chosen carefully such that the N- implant doesn’t penetrate into the well, N- denotes a light dosage of implantation, and the gate protects the channel area from being exposed to the implantation. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/39.JPG)
+
+Next we do the same for the N well, in creating the lightly doped P- regions. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/40.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/41.JPG)
+
+We also have to protect the newly created doped drains, as when we try to generate the actual source and drain, the doped drains structure might get disrupted. So to do this we create some side wall spaces through anisotropic etching, which is a directional etching, so everything will be etched off except for the side walls, creating the side wall spacers. The further implantation will only be impacted on the exposed regions beside the side wall spacers. 
+
+##### source and drain formation 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/42.JPG)
+
+The next step is to add a thin layer of silicon oxide, this is to avoid the effect of channelling, where we protect the substrate from getting any diffusion during the ion implantation stage. With the layer of silicon oxide, we try to randomize the direction of the ions during ion implantation. 
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/43.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/44.JPG)
+
+Then we expose the are for the N-mos to perform ion implantation of arsenic to create the N+ source and drain while keeping the LDD intact through the side wall spacers created in the previous step.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/45.JPG)
+
+Then we do the same for the p-mos as well.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/46.JPG)
+
+Then we heat the structure in the driver furnace, exposing to high temperature annealing, to cause the diffusion to go even deeper into the substrate, forming the source and drains.
+
+##### Local interconnect formation 
+
+The contacts are very important for user to control the characteristic of the mos devices.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/47.JPG)
+
+First the thin screen oxide is removed using HF solution to open up the areas for contact building.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/48.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/49.JPG)
+
+We need to deposit titanium on the wafer surface through sputtering. Sputtering is the process of hitting the titanium layer with argon gas, so the titanium particles will get removed out and sputtered onto the substrate. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/50.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/50a.JPG)
+
+Then we heat this structure to cause a reaction and create the contact between the titanium and the substrate, which will result in the low resistant TiSi2 being formed. As you can see the regions of titanium in contact with the silicon will react with the silicon. There is also the reaction between the titanium and the nitrogen ambient resulting in TiN which is only used in local communication. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/51.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/52.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/53.JPG)
+
+Through the lithography process and the etching process using RCA cleaning, we leave the TiSi internal connects and the TiN local interconnects.  
+
+##### Higher metal level formation
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/54.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/55.JPG)
+
+The steps in the higher metal level formation are the same as the previous step. In regards with the current metal topography, it cannot be used for the reason being there are some problems in terms of the metal discontinuity, so we need to planarize it. This is done firstly by depositing a thick layer of SiO2 that has been doped with phosphorus or boron, phosphorus to protect the sodium ions, and boron to reduce the temperature. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/56.JPG)
+
+Then we undergo chemical mechanical polishing to planarize the wafer. Now we are ready to go for the higher metal level interconnects. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/57.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/58.JPG)
+
+We do so by drilling some contact holes through lithography and etching, making the TiN and the TiSi2 accessible to the top layers. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/59.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/60.JPG)
+
+Then a thin layer of TiN is deposited and a blanket tungsten (W) layer is deposited, which helps us by creating the contact from the bottom to the top. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/61.JPG)
+
+Then through CMP we remove the addition tungsten and planarize the surface.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/62.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/63.JPG)
+
+Then through masks we bring these contact rules outside the chip. We use Al as the metal layer to connect the tungsten holes. Then we mask it to later take it to the higher metal layers. We have aluminium regions in contact with the tungsten holes, which is the second layer of metal. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/64.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/65.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/66.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/67.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/68.JPG)
+
+Through the similar steps, we bring the metal to the higher layers through the TiN layer and tungsten contacts created in the holes etched, and then he third level of interconnects is created. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/69.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/70.JPG)
+
+ Then on the last level of the chip we have the top dielectric layer applied to protect the chip. And a final mask will be used will be used to create the etched holes for the contact holes on the layer, connecting the outside of the chip. 
+
+</details>
+
+<details><summary>  Lab Day 17 </summary>
+
+#### IO Placer Revision
+
+We will be using new .lib files to perform the post layout simulation, post characterizing our sample cell, and plugging this cell into the openlane flow for the picorv32a core. 
+
+For the design at the floorplan stage, we can still implement changes on the fly. 
+
+If we want to change the placement of the IO pins to be around the core, instead of being equidistance and placed randomly. There are 4 strategies that are supported by the IO placer, one of the open source eda tools used in the open lane flow. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/101.JPG)
+
+Variable for the IO placer config within the floorplan.tcl file. The value is set to one for random equidistance. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/102.JPG)
+
+To set the floorplan io mode, we need to use the command set ::env(FP_IO_MODE) 2. And run floorplan again. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/103.JPG)
+
+Now from the design, we can see, the placement method has been changed to being non equidistant, the pins have been stacked on top of one another. 
+
+This is the way the changes are made, by resetting the variables and running the flow again. 
+
+#### Lab steps to git clone vsdstdcelldesign
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/104.JPG)
+
+Now we will be cloning files so that we can have the lib files that will allow us to create a new cell and plug in that into openlane flow, instead of removing the standard definition and editing with custom definitions. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/105.JPG)
+
+We will first open up the mag file and see the different layers that is used in the building of the inverter. We will be doing the spice extraction as well as the post synthesis spice simulation. We need to have the magic tech file before we can open the mac file. We use the command magic command to view the layout. 
+
+#### Lab introduction to Sky130 basic layers layout and LEF using inverter
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/106.JPG)
+
+On the right side we can see the colours which represent the layers which we can choose. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/107.JPG)
+
+We can see the name of the layer in the top right corner by hovering over a layer.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/108.JPG)
+
+Hovering over an area, selecting and using the command what will tell the user the selected mask layer. This also tells us that the gats of the mos devices are connected. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/109.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/110.JPG)
+
+Clicking s multiple times includes connected devices into the selection as well. 
+
+https://github.com/nickson-jose/vsdstdcelldesign 
+
+The above site will have a detailed explanation on the technology LEF of the inverter, and how to create a std cell through magic, and building a CMOS step by step.
+
+#### Lab steps to create std cell layout and extract spice netlist
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/111.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/112.JPG)
+
+ We can see the drc violations in the top of the magic window. To find out the error, click the drc tab  and hit drc find next error. We need to ensure final design is drc clean. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/113.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/114.JPG)
+
+To perform the spice extraction, we need to create an extraction file, using command “extract all”. Then to create the spice file, we use the command “ext2spice cthresh o rthresh 0” and “ext2spice”
+
+#### Lab steps to create final SPICE deck using Sky130 tech
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/115.JPG)
+
+The generated spice file ahowing the pmos and nmos, with the characterization details and connections. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/116.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/117.JPG)
+
+We need to edit the scale in the spile code to reflect the value in the magic tool. We must also include the pmos and nmos lib files. And we need to comment out the subckt and .end line because we want to include the transient analysis controls as well. Supply voltages needs to be defined. The input pulse must also be specified, and the specification for the transient analysis.  The pmos and nmos models must be renamed accordingly as well in order for the paremetres to be correctly taken from the model lib file.  With this the spice deck is final, and we use the command ngspice to run the spice simulation.
+
+#### Lab steps to characterize inverter using sky130 model files
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/118.JPG)
+
+Using the command “plot y vs time a” to show the output y while sweeping input a. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/119.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/120.JPG)
+
+To get the rise transition, we take the time between the values at 20% and 80% of the input signal. The input transition time is 0.0424ns.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/121.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/122.JPG)
+
+Similarly, we can get the fall transition through the same method. Our fall transition is 0.0626ns.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/123.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/124.JPG)
+
+The cell rise and fall delay is calculated based on the 50% point. The cell rise delay is 0.355ns.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/125.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/126.JPG)
+
+The cell fall delay is -0.00389ns.
+
+#### Lab introduction to Magic tool options and DRC rules
+
+There are details for using magic in the website https://opencircuitdesign.com/magic/
+
+Magic technology file tells everything that is needed to know about a process, such as connectivity, drc rules, device extraction rule, generating netlist, rules for reading lef and def. 
+
+CIF refers to one of the common output data formats. Stands for caltec intermediate format and is a human readable format. CIF is sometimes used interchangeably with GDS.
+
+The syntax for DRC rules are available in the DRC section. The basic DRC rules are known as edge-based rules. They work by finding the edge or boundary between 2 layers and checking the area in front of or behind of anything that is violating the design rule. 
+
+#### Lab introduction to Sky130 pdk's and steps to download labs
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/127.JPG)
+
+In order to import the magic layouts for the exercise, we use the command wget from the specified link. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/128.JPG)
+
+We run magic using the “magic -d XR” command
+
+#### Lab introduction to Magic and steps to load Sky130 tech-rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/129.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/130.JPG)
+
+Open the metal3 file through the file tab. We can see a few independent layout geometries.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/132.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/133.JPG)
+
+One of the rules that must be adhered by magic for metal 3 is that via2 must be enclosed by metal 3 by at least 0.065 microns. To see this visually happening in magic, draw a square and selecting the M3contact on the layer panel by hovering an pressing the p key, then with the cursor box around the area, type the command “cif see VIA2”, we will see the via cuts within the M3 contact, they are created based on the rules in the tech file. The distance between the via cut and the edge is will never be smaller than 0.065 as specified by the rules, thus there will be no drc violation. 
+
+#### Lab exercise to fix poly.9 error in Sky130 tech-file
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/134.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/135.JPG)
+
+Now we load in poly.mag, which is having 34 drc rules violated. One of the rule violations we should be seeing is the poly.9 rule violation “poly resistor spacing to poly or spacing (no spacing) to diff/tap” must be more than 0.480 microns. We need to correct te tech file, so that this rule gets flagged as a drc violation in the magic tool.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/136.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/137.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/138.JPG)
+
+We need to edit the tech file appropriately based on the poly.9 key. No rule was made for distance rule between poly resistor to poly. 
+
+We use the command “tech load sky130A.tech” to automatically read in the newly modified tech rules. Then run command “drc check”, now the spacing rule has been applied and the violation is showing. 
+
+#### Lab exercise to implement poly resistor spacing to diff and tap
+
+#### Lab challenge exercise to describe DRC error as geometrical construct
+
+#### Lab challenge to find missing or incorrect rules and fix them
+
+</details>
+
