@@ -135,7 +135,7 @@ Assembler: translate the program written in assembly language into machine code 
 
 </details>	
 	
-### Lab session
+<details><summary> Lab session </summary>
 
 #### Steps
 
@@ -149,10 +149,12 @@ Assembler: translate the program written in assembly language into machine code 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day0.JPG) 
 
 > error encountered after source standaloneHome/top.tcl
+	
+</details>	
 
 ## **Day_1 : Introduction to iverilog design test bench** 
 
-### Lecture + VSD-IAT recordining Topics 
+<details><summary> Lecture + VSD-IAT recordining Topics </summary>
 
 * RTL
 
@@ -241,7 +243,9 @@ We need cells to work fast to meet the required performance, but will sacrifice 
 But, to handle hold issues that may be present, we need to have cells that work slow, which will also cause circuit to be sluggish
 Guidance is needed for the synthesizer to select the appropriate cells for optimum implementation of the logic circuit, this guidance is offered though the use of constraints 
 
-### Lab Day_1
+</details>	
+	
+<details><summary>  Lab Day_1 </summary>
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day_1/lab/1.jpg)
 
@@ -283,8 +287,10 @@ verilog file written from netlist produced
 
 simplified verilog file written using the -noattr switch 
 
+</details>	
+	
 ## **Day_2 : Timing, Hierarchical vs Flat synthesis, and Efficient flop coding style** 
-### Lecture + VSD-IAT recordining Topics 
+<details><summary> Lecture + VSD-IAT recordining Topics </summary>
 * Fundamental of CMOS
 
 complementary metal-oxide semiconductor 
@@ -372,7 +378,9 @@ Synchronous flops means the output of the circuit will be triggered solely on th
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/Day_2/6.jpg)
 
-### Lab Day_2
+</details>	
+	
+<details><summary>  Lab Day_2 </summary>
 
 * Top module synthesis
 
@@ -436,9 +444,12 @@ Synchronous flops means the output of the circuit will be triggered solely on th
 
 > multiplying by 9: 111(7) + 00 = 111111(63)
 
+</details>	
+	
 ## **Day_3 : Combinational and sequential optimizations** 
 
-### Lecture + VSD-IAT recordining Topics 
+
+<details><summary>  Lecture + VSD-IAT recordining Topics  </summary>
 
 * Nature of synthesis and optimization
 
@@ -500,7 +511,9 @@ Cloning is a physical aware optimization that decreases the load of heavily load
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day3/3.jpg)
 
-### Lab Day_3
+</details>	
+	
+<details><summary> Lab Day_3 </summary>
 
 #### Combinational Logic Optimization
 
@@ -623,8 +636,10 @@ Counter_opt2:
 
 > at the output, we have inverted inputs !2!1!0, fed into a nor gate with an inverted C pin, thus the inputs are 2!1!0 ~= 3[3'b100]
 
+</summary>	
+	
 ## **Day_4: Timing, Hierarchical vs Flat synthesis, and Efficient flop coding style** 
-### Lecture 4 & VSD-IAT recordining Topics 
+<details><summary> Lecture 4 & VSD-IAT recordining Topics </summary>
 #### Gate level simulation
 
 Running test bench with netlist, instead of the RTL, as Design Under Test
@@ -739,6 +754,8 @@ Nonblocking assignments are meant for sequential logics
 
 Sequential and combinational logics should be kept separate
 
+</details>									     
+									     
 ### Lab Day_4
 #### GLS and Synth Sim Mismatch
 
