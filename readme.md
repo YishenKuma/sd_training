@@ -4223,14 +4223,54 @@ We use the command “tech load sky130A.tech” to automatically read in the new
 </details>
 
 <details><summary> Lab exercise to implement poly resistor spacing to diff and tap </summary>
+	
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/140.JPG)
+
+We need to make several copies of the three resistors, because there are a number of varieties of diffusion in tap, and check against p-diffusion, n-diffusion p-tap and n-tap, using the psd and nsd layers.  Now we can see the errors related just for the poly resistance. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/141.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/142.JPG)
+
+The xhr and uhr ploy resistor are showing the violations, but the n-poly resistors are only flagging the distance to n-tap. Ther is only one rule implemented in the rule file for polyres to n-tap. We fix this in the rule file by, changing the violation rule from *nsd to alldiff.
 
 </details>
 
 <details><summary> Lab challenge exercise to describe DRC error as geometrical construct </summary>
+	
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/143.JPG)
+
+There is a rule type known as cifmaxwidth that checks layers exactly as they appear in gds output even though the layers aren’t something you can draw directly in the layout. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/144.JPG)
+
+The main thing to focus in the rule is the layer name, which is the layer defined in the special cif output section in the tech file. We can see in the nwell.mag the rule being violated, based on the nwell.6 rule which states the nwell must extend the inside of dnwell by 1.30 microns. The point of the rule is that the edge of the dnwell must be covered with overlap all around by a ring of regular n-well. The outside distance rule casn be implemented by a simple surround drc rule, but the inside distance cant be captured with a simple edge type rule. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/145.JPG)
+
+We edit the tech file at the style drc section. The way the cifmaxwidth drc rules are implemented with width = 0, implies that the nwell_missing layer is whats leftover, if either the inside or outside dimension of nwell overlap dnwell doesn’t reach the required distance. Evrything in the difoutput drc style is implemented as a temp layer rather than a layer, all temp layers are basically support layers that are needed to get the right results for an output layer, but not appearing in the output themselves. The dnwell_shrink represents the largest open area that you can have inside the drawn dnwell. The nwell_missing layer starts with the dnweel layer, then it grows it by 400, which is the distance required by the surround rule, which gives us the smallest nwell variant that is needed to cover the dnwell.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/146.JPG)
+
+Use the command “cif ostyle drc” because you can only see layers for the cif layer style that is selected for output. Then use the command “cif see dnwell_shrink”, to see that area. Then clear it with “feed clear” and “cif see nwell_missing” which shows the area which gets flagged with the error. 	
 
 </details>
 
 <details><summary> Lab challenge to find missing or incorrect rules and fix them </summary>
+	
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/147.JPG)
+
+Now we look at the nwell.4 rule, which states that all nwell will contain metal contact in tap, rule checks only for licon ln tap, evry nwell must have an n-tap layer contact, which in magic is called n-contact. Since there is no distance associated with the rule, its impossible to write this as a simple edge based drc rule, but it does lend itself to a cifoutput rule very easily.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/148.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/149.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day17/150.JPG)
+
+The general idea of the rule is to take all ntap contacts and expand and fill the area of any nwell underneath, for that, there is a cif output operator known as bloat-all, after applying the operator, you will have all nwell that contain taps, so all that needs to be done is to take all nwells and remove the set of all nwells that contain taps, and whatever is leftover is an error. 
+
+Read the tech file again and change the style to drc full usiong command “drc style drc(full)” and perform the drc check. 
 	
 </details>
 
