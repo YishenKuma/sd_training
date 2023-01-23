@@ -36,6 +36,8 @@ Content of training:
 
 - [Day_17: Design and characterise one library cell using Layout tool and spice simulator](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_17-design-and-characterise-one-library-cell-using-layout-tool-and-spice-simulator)
 
+- [Day_18: Pre-Layout STA and Importance of good clock tree](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_18-pre-layout-sta-and-importance-of-good-clock-tree)
+
 
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
