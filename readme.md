@@ -4278,3 +4278,431 @@ Read the tech file again and change the style to drc full usiong command “drc 
 	
 </details>
 
+## **Day_18: Pre-layout STA And Importance of Good Clock Tree**
+
+<details><summary> Lecture Day 18 </summary>
+
+<details><summary> Timing Delay using delay tables </summary>
+
+<details><summary> Delay Tables </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/1.JPG)
+
+With the use of gates for clock nets, such as shown in the above figure, which is the method known as clock gating, we can ensure no dynamic switching and short circuit power consumed by the clock tree, during the time the clock gets gated.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/2.JPG)
+
+We need to look into the timing characteristics of the buffer, in the case where we want to swap out the buffer for a gate. For each level of buffering, we should have an identical buffer being used, and each node should be driving the same node. We need to keep in mind that the load at the output will be varying, and since the load of one buffer is varying, the input transition of the following buffer will also vary. This means that we will have a variety of delays.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/3.JPG)
+
+The delay table is characterized based on varying the input transition and output load of a cell, against the delay of that cell. Each cell will have its own delay table for different sizes and threshold tables.
+
+</details>
+
+<details><summary> Delay Tables usage </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/4.JPG)
+
+Each type of cell will be having its own individual delay table, as the internal pmos and nmos w/l ratio gets varied, the resistance changes, then RC constant gets varied as well, meaning the delay of each cell gets varied. The values of delay which are not available on the table are extrapolated based on the given data. 
+
+Similarly, to how we have a delay table, we will also have a characterization table for input transition. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/5.JPG)
+
+The latency at the endpoints will be the sum of the delays of each individual cell in that path. The total skew value between two endpoints will be non-zero if the output load driven for a cell is varied, meaning different delay numbers are seen between endpoints, this is why it is preferred to have the nodes at each level driving the same load. Another case in which we can retain the skew to be zero in the presence of varied load, is by using a different buffer size at the same level that can achieve the same level of delay as the other buffer in same level based on its delay table.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/6.JPG)
+
+These are factors which should be looked into in the early stages of the clock tree design stage. Now we must look into power aware CTS, where we have to consider endpoints which are only active under certain conditions. In these cases, we need not propagate the clock into those cells during the period of inactivity.
+
+</details>
+
+</details>
+
+<details><summary> Timing analysis with ideal clocks using openSTA </summary>
+
+<details><summary> Setup timing analysis and introduction to flip-flop setup time </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/7.JPG)
+
+At the zero time stamp, there is one clock edge that reaches the launch flop. And at the T time stamp, the second rising edge reaches the capture flop. Any analysis that needs to be done is between 0 and T. For the combinational circuit to work, the combinational delay needs to be less than the period, T.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/8.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/9.JPG)
+
+Now looking at more practical scenarios. Looking at how the flop works, there will be a delay within the internal flop circuitry, between mux 1 and mux 2. These internal delays will restrict the combinational delay requirements. This internal delay is known as the setup time, and this setup time needs to be subtracted away from the complete clock period T. Now the capture flop has enough time for it to compute the data within the flop and ensure the data is ready at Q by the time the second rise edge of clock reach.
+
+</details>
+
+<details><summary> Clock jitter and uncertainty </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/10.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/11.JPG)
+
+The next practical scenario to take into consideration is jitter. The clock is expected to reach the clock pin at exactly 0s or at Ts, but in real scenarios, the clock signal may not be able to reach at the exact moment, as the clock source generation may have its own built-in variation. This is known as jitter, the temporary variation of the clock period. The combinational delay will become more stringent as a result. Thus we change our combinational delay to factor in the uncertainty factor from the jitter.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/12.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/13.JPG)
+
+The combinational delay of a path will look as shown above. 
+
+The next challenge comes in performing timing analysis with multiple ideal clocks.
+
+</details>
+
+</details>
+
+<details><summary> Clock tree synthesis TritonCTS and signal integrity </summary>
+
+<details><summary> Clock tree routing and buffering using H-tree algorithm</summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/14.JPG)
+
+Clock tree synthesis is done to propagate the clock signals to all the clock pins in the deisgn, however, a good clock tree needs to be designed to take into account the skew between the clock pins due to long routing. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/15.JPG)
+
+Through the use of H-tree, which is a smarter implementation for a clock tree design, which is designed based on the distances between the clock pins in the design between the clock port. This is to give a skew value as close to 0 as possible by having the clock signals reach all the cells at the same time. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/16.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/17.JPG)
+
+The next step is to perform clock tree buffering. The wires for the clock routes each will have resistances and huge number of capacitances, and with the long routing, there will be signal integrity issues, thus, to maintain the signal integrity, we need buffering on these nets.  
+
+</details>
+
+<details><summary> Crosstalk and clock net shielding </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/18.JPG)
+
+Another topic to understand before moving to using real clocks is clock net shielding. Clock nets are the critical nets in the design, we build the clock tree to ensure there is a minimum skew. However, if there is any cross talk that happens and affect the clock signals, that will affect the design very badly. By shielding, we are protecting the clock nets from the outside world, avoiding glitches and delta delays from occurring. If a glitch occurs on the clock net, incorrect data in the memory will cause inaccurate functionality for the design. The shield can be connected to ground or to Vdd, as long as there is no switching activity occurring. Critical data nets are also necessary to be shielded.  
+
+</details>
+
+</details>
+
+<details><summary> Timing analysis with real clocks using openSTA </summary>
+
+<details><summary> Setup timing analysis using real clocks </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/19.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/20.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/21.JPG)
+
+With real clocks, we will need to have buffers inserted into the clock path to ensure the clock signal integrity. Now because of the buffer introduction, the clock edge will reach the clock pin with consideration to the delays of the buffers inserted. The clock network delay will also need to take into consideration the delays from the buffers inserted. The window will become shifted as a result of the delays from the buffers inserted. The skew for this design will now be the difference between the deltas, and our equation for setup timing analysis will also change based on the image shown above. If the data arrival time is higher than the data required time, then we will have negative slack on the path, meaning we have a violation. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/22.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/23.JPG)
+
+For hold timing analysis, where the capture edge is on the o clock rise edge, the combinational delay should be greater than the hold time of the flop, the hold time refers to the second mux delay, which is the time required for the data to be sent after the clock edge within the flop. So the Data needs to arrive after the hold time, so the new data can be captured into the flop, after existing data is launched out. 
+
+</details>
+
+<details><summary> Hold timing analysis using real clocks </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/24.JPG)
+
+Introducing more real factors into our design for hold analysis will yield the above equation for hold timing. Jitter for the launch clock and capture flop will not need to be taken into consideration as the design is on the 0 clock edge, the arrival difference for the capture and launch flop will be the same, so the uncertainty should be kept low for the hold anlaysis. The slack formula will be data arrival time – data required time, and if data required time is higher, we will have negative slack, meaning the timing path for hold will be violated. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/25.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/26.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/27.JPG)
+
+For the timing path for setup for real clocks, now we need to take into considerations the deltas that were mentioned earlier, for delta1, launch clock network delay, and delta2, capture clock network delay. The equations for setup time and hold time are shown. 
+
+</details>
+
+</details>
+
+</details>
+
+<details><summary> Lab Day 18 </summary>
+
+<details><summary> Timing Delay using delay tables </summary>
+
+<details><summary> Steps to convert grid info to track info </summary>
+
+The next objective in the course is to extract the LEF file, which contains the info on the via boundary, power and ground rates, and the input and outputs, from the .mag file. And, we want to try and plug the lef file into the picorv32a flow, instead of the previous standard cell library. 
+
+There is a guideline that needs to be followed in creating a std cell set. One of the mains ones, is that the input and output ports must lie on the vertical and horizontal tracks. Second, the width of std cell should be based on the track pitch, and the height should be based on the track vertical pitch.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/101.JPG)
+
+We can see the track info in the lib directory of openland within the pdks folder. Tracks are used during the routing stage. The specifications for the routes for each layer musty be declared before the routing occurs. The ports of the cell are in the li1 layer, so the ports need to be ensured to be on the intersections of the horizontal and vertical tracks. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/102.JPG)
+
+Use the hotkey “g” to activate the grid. Now we can verify if the ports are on the horizontal and vertical intersections of the tracks for li1. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/103.JPG)
+
+We set the grid setting based on the track info as shown above using the command “grid 0.46um 0.34um 0.23um 0.17um”. What we have done is that we have converted the track info into a grid for our cell.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/104.JPG)
+
+Now we can see that the ports are aligned on the intersection for the horizontal and vertical tracks. This ensures that during routing, the routes can reach the ports from both x and y direction. 
+ 
+</details>
+
+<details><summary> Steps to convert magic layout to std cell LEF </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/105.JPG)
+
+Second requirement of guideline for creating the std cell set is that the width and height of the std cell should be in the odd multiples of the x and y pitch of the tracks. 
+
+Whenever a layout is made, the layers are defined, but there are no ports, ports do not mean anything to the validator. Port definitions are required when we want to extract the lef file. The ports will be defined as the pins of the macros. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/107.JPG)
+
+We can use text helper to create the port in our design. The port number refers to the order in which the port is written in the lef file. This is how we define the ports for all the layers in the design. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/108.JPG)
+
+Next, we need to declare the usage of the port, and that is done through set port class and port use attribute for a layout. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/109.JPG)
+
+Once the parameters for the ports have been set, we are ready to extract the lef file. We create the mag file using the command “save <name.mag>”. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/110.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/111.JPG)
+
+Then we open the created mag file and use the command “lef write”, if we do not specify a name, then the lef file name will be based on the .mag file name.
+
+</details>
+
+<details><summary> Timing libs and including new cells in synthesis </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/112.JPG)
+
+We copy the newly written lef file into our design folder for picorv32a. This is so we can include the custom cell into the openlane flow, starting with the synthesis step. We need to ensure the abc step maps the cell appropriately, thus we need to have a library which has the cell definition.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/113.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/114.JPG)
+
+Lastly, we need to modify our config.tcl to ensure the extra lef is read in frm the folder, based on the two commands that need to be run. The -tag and -overwrite options during prep -design is used to take in the new values and overwrite the old values in the runs.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/115.JPG)
+
+During synthesis, we can see the custom cell can be shown to be mapped in. 
+
+</details>
+
+<details><summary> Configuring synthesis settings to fix slack and include vsdinv </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/116.JPG)
+
+In our synthesis we have a worst slack of -24.89, and total negative slack of -759.46. We need to try to find out how we can reduce these values by making the synthesis timing driven, by trying to strike a balance between the delay and the area. Our chip area was reported to be 147712.918400. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/117.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/118.JPG)
+
+The way we can change the strategy for synthesis run is through using the command “set ::env(SYNTH_STRATEGY) “DELAY 3””, instead of the previous value 0, which has more focus on reduced area size. SYNTH_BUFFERING is to insert buffer in high fanout nets, which is enabled by default. SYNTH_SIZING is to perform cell sizing instead of buffering, which is disabled as default, we will enable this. Setting SYNTH driving cell allows us to change the cell driving the port, to use a cell with higher driving power in case we wanted. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/119.JPG)
+
+Now we can see a change from the previous synthesis run, we are having no more slack with a large in increase in size of chip area to 181510.332800.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/120.JPG)
+
+Custom cell exist within merged.lef within temp directory of run folder.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/121.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/122.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/123.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/124.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/125.JPG)
+
+Then we proceed to run floorplan and placement steps. But error is encountered in the run_floorplan flow due to the EXTRA_LEFS variable that was set in the config.tcl causing the flow to stop. The workaqround for this is to comment out the basic_macro_placement command to pass floorplan in /scripts/tcl_commands/floorplan.tcl. And comment out macro placement within scripts/openroad/or_basic_mp.tcl.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/126.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/127.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/128.JPG)
+
+Then we run magic. We can find the custom cell using command getcell. As we can see, the custom cell has been successfully plugged into the custom lane flow.
+
+</details>
+
+</details>
+
+<details><summary> Timing analysis with ideal clocks using openSTA </summary>
+
+<details><summary> Configuring Open STA for post synthesis timing analysis </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/129.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/130.JPG)
+
+Usually what is done in the case that there is a timing violation is that we perform analysis in a separate tool. In our case, we will be using openSTA. We need to write a configuration file as shown above to read in the necessary files. Within the pre_sta.conf, we have a few settings written out for the units, libs and verilog files read, and reports written. We will be reading in the netlist after synthesis stage, as so far we have gone until the placement stage, which has no changes on the netlist. We also need to have written a base_sdc file within the src folder for the sta tool to read. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/131.JPG)
+
+Then we run sta using the command “sta pre_sta.conf”.
+
+</details>
+
+<details><summary> Optimize synthesis to reduce setup violations </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/132.JPG)
+
+For our hold timing, it does not hold any significance as we have not done CTS, and we are assuming ideal clocks, so the slew is zero. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/133.JPG)
+
+For setup timing, we start at the top where our delays are high. The higher the slew or capacitance, the higher the delay of the cell. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/134.JPG)
+
+We will first try to optimize the fanout value. We run synthesis again, but change the value of SYNTH_MAX_FANOUT to 4, from the previous value of 6.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/135.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/133.JPG)
+
+Our value of tns has reduced but not by a large amount, this is due to the high fanout of 33 coming from output net of sky130_fd_sc_hd__dfxtp_2 causing the cap value to be very high. We will tyr to reduce this by upsizing the cell using command “replace_cell _35210_ sky130_fd_sc_hd__dfxtp_4”. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/136.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/137.JPG)
+
+We can now see a reduction in the input transition as well as the delay from the change in the cell type. There is also slight reduction in the wns and tns values. 
+
+</details>
+
+<details><summary> Perform basic timing ECO </summary>
+
+Upsizing the buffer is one of the ways in which we can improve the timing, by increasing the drive strength of the cell while at the sacrifice of size, we improve on the timing. 
+
+</details>
+
+</details>
+
+<details><summary> Clock tree synthesis TritonCTS and signal integrity </summary>
+
+<details><summary> Run CTS using TritonCTS </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/138.JPG)
+
+For openLane to implement the changes we have done in openSTA, we need to use the command “write_verilog” and overwrite the existing verilog file. The we run floorplan and placement, and the new netlist will be read in. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/139.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/140.JPG)
+
+We use the command “run_cts“ based on the parameters set in the config file. The netlist will also be modified as there will be buffers being added into the clock paths. 
+
+</details>
+
+<details><summary> Verify CTS runs </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/141.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/142.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/143.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/144.JPG)
+
+The commands used so far “run_synthesis” “run_cts” are procs within the openlane default settings, taken from the script’s directory. We have a sperate scripts folder for all the open road scripts to be used for the openRoad apps.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/145.JPG)
+
+Clock buffer cells added in the stage. The CTS_MAX_CAP refers to the max cap for the root clock buffer, and this value can be found in the typical lib file that is used for the design within the src folder.
+
+One of the disadvantages of the tritonCTS is that it cannot create an optimized CTS for multi corner, it can also perform for a typical corner. 
+
+</details>
+
+</details>
+
+<details><summary> Timing analysis with real clocks using openSTA </summary>
+
+<details><summary> Analyse timing with real clocks using openSTA </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/146.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/147.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/148.JPG)
+
+OpenRoad has openSTA integrated into the tool. We enter into openroad from the openlane tool using the command “openroad” to perform timing analysis of the clock tree. The benefit of doing this is that we can use the variables set within the openlane flow. Then we need to create a db, based on the LEF and DEF file, using the command “read_lef”, “read_def”, and “write_db”. Then read in the db using “read_db”, and then “read_verilog”, “read_liberty” for max and min, and “read_sdc”. Then use the command “set_propagated_clocks [all_clocks]” to calculate the actual cell delay in the clock path.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/149.JPG)
+
+Timing analysis using command “report_checks -path_delay min_max -format clock_expanded -digits 4”
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/150.JPG)
+
+Timing analysis for the hold timing. The hold slack needs to rectified first and foremost as the violation cannot be solved by simply changing the period. 
+
+Once we perform the next stage which is routing, the resistances and capacitances will be introduced will cause the delays to increase further. For hold point of view this can reduce the slack, but will cause the setup slack to become worse. 
+
+</details>
+
+<details><summary> Execute openSTA with right timing libs and CTS assignment </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/151.JPG)
+
+The CTS is built to optimize for the typical corner, but the libraries we have included for this analysis is the min and max libraries, for min and max corners. Thus this analysis is not actually correct. What we need to do is include only the typical library for the typical analysis. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/152.JPG)
+
+Now our timing analysis will be accurate.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/153.JPG)
+
+Timing report for hold analysis. 
+
+Note that both hold and setup timings are now met. For typical corner, CTS would not have any violations. IF we wanted to do for the min and max corners, we would need to do them separately as tritonCTS does not currently support multicorner optimization. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/154.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/155.JPG)
+
+One thing to note is that the clock buffers are inserted based on the CTS_CLK_BUFFER_LIST from left to right to meet the skew value, if the skew value is not met, then the next buffer is used, but the buffer will increase in size from left to right. We would want the skew values to be within the 10% of the max clock period. If we wat to use a different clock buffer, we need to remove the clock buffer from the list and rerun CTS. We use the command “lreplace” to remove a value from a variable. 
+
+</details>
+
+<details><summary> Observe impact of bigger CTS buffers on setup and hold timing </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/156.JPG)
+
+Now we rerun CTS and recheck the timing reports again. Make sure to change the CURRENT_DEF value back to placement stage, or we will be seeing timing errors, meaning the CTS is not run correctly.  Then enter open road and rewrite the db from the same steps earlier as the db needs to be redone with the new CTS performed. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/157.JPG)
+
+For the hold timing report. The slack values are met but are not improved compare to the previous run even though larger buffers are being used. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/158.JPG)
+
+Using the command “report_clock_skew -hold” and “report_clock_skew -setup”	
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day18/159.JPG)
+
+If we want to add the buffer type 1 back into the CTS_CLK_BUFFER_LIST, we use the command “linsert”.
+
+</details>
+
+</details>
+
+</details>
+
