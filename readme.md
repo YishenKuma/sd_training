@@ -4707,4 +4707,189 @@ If we want to add the buffer type 1 back into the CTS_CLK_BUFFER_LIST, we use th
 </details>
 
 </details>
+	
+## **Day_19: Final Steps For RTL2GDS**
+
+<details><summary> Lecture Day 19 </summary>
+
+<details><summary> Routing and design rule check </summary>
+
+<details><summary> Introduction to Maze routing – Lee’s Algorithm </summary>
+
+Routing is the process of creating the physical wire connections within the design. We have algorithms in place top help determine the best way the routing can be done between two endpoints, the source, and the target, with the shortest distance and the least number of zig-zag turns.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/1.JPG)
+
+One such algorithm that we will be looking at is lee’s algorithm, also known as maze routing. The algorithm needs to be aware any blockages set that hinders any routing to be done in a particular area. The first thing that is done in this algorithm is to create a routing grid at the backside of the floorplan. Then two points are created, the source and the target, through the routing grid, the software determines the best route possible through numberings one by one through each possible path to the target, and the path that requires the least number of grids squares to reach the target with least number of turns would be the best route.  
+
+Performing the routing for 1 route will be fairly simple, but when we have millions of start and endpoints to route between, this method will consume a lot of time and memory. There are some algorithms that can help to reduce the time and memory consumption such as line-search algorithm, stanner-tree algorithm. 
+
+</details>
+
+<details><summary> Design Rule Check </summary>
+
+The DRC rules are the rules that should be followed whenever the routing of the design is performed. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/2.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/3.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/4.JPG)
+
+One of the rules may be the minimal wire width, where the width of the wire should be no less than a specified amount, based on the limitations of the fabrication process. Another rule that is based on the fabrication process of lithography is the wire pitch, where the centre-to-centre distance between 2 wires should be no smaller than a certain distance. Wire spacing rule, where distance between 2 wires should be no smaller than a certain distance. These are just 3 or the thousand of rule the tool has to adhere when performing the routing of the design. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/6.JPG)
+
+One type of DRC violation is a signal short, where two wires that are not intended to be connected become in contact on the same layer, and this could lead to functional failure, so this needs to be taken care of. We can solve this by simply moving on of the wires on to a different metal layer, but with this, comes new drc rules that need to be adhered to.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/8.JPG)
+
+First is that the via width, where the width of the via should be no less than a certain value. Second is the via spacing, where the distance between 2 vias cannot be less than a specific distance. Most of these DRC rules come from the lithographic process and the limitations that come with the technology. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/9.JPG)
+
+The next step would be to perform parasitic extraction, where the resistances and capacitances of the wires are extracted and used for further processes.
+
+
+
+</details>
+
+</details>
+
+<details><summary> Triton Route Features </summary>
+
+<details><summary> Honors pre-processed route guides</summary>
+
+TritonRoute is the tool used to perform initial detail routing. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/10.JPG)
+
+In fast routing, a rough routing draft is created. The fast routing is the engine which is used for global routing. The detailed route is performed by the TritonRoute and the global routing is done by the fast route. During global routing, the region is divided up into grids cells,which acts as a route guide for the TritonRoute to use for the detail routing, where an algorithm is used to find the best connectivity between the points. 
+
+It honours the preprocessed route guides (obtained after fast rourtes), wherein the tool attempts as much as possible to route within route guides. The tool assumes route guides for each net satisfies inter-guide connectivity. Triton route works on proposed MILP (Mixed integer liner programming) -based panel routing scheme with intra-layer parallel and inter-layer sequential routing framework, to finds the best way to perform the routing, where intra-layer refers to the routing within a layer, and inter-layer routing refers to routing between layers, through the uses of vias.
+
+</details>
+
+<details><summary> Inter guide connectivity and intra & inter layer routing </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/11.JPG)
+
+The preprocessed guides should have unit width and must be in the preferred direction of the layer. Global route is done by fast route, and the output would be the routing guide. The initial route guides are transformed into the preprocessed guides through splitting, merging, and bridging. Whenever the tool sees the route guide with non-preferred direction, it divides the route guide into unit widths, and then the route with preferred direction is merged, then the non-preferred direction routes is bridged to become a route on another layer, which is the preferred direction for routing. This way, we avoid parallel routing with higher layers, avoiding parallel plate capacitance. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/13.JPG)
+
+Each layer or panel will have its own preferred routing direction assigned to it, in which the routes should be formed. Routing in the higher layers will begin only one the routing the bottom layers have been completed. 
+
+Two guides are connected if they are on the same metal layer with touching edges, or if they are on neighbouring metal layers with a non-zero vertically overlapped area. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/12.JPG)
+
+Each unconnected terminal (i.e., pin of a standard cell instance) should have its pin shape overlapped by a route guide. The purple box in the image would be the routing guide on the metal 1 layer that would overlap with the unconnected terminal. 
+
+</details>
+
+<details><summary> Triton Route to handle connectivity </summary>
+
+The inputs needed for TritonRoute are the LEF file, DEF file, and the Preprocessed route guides. 
+
+The outputs from the TritonRoute would be a detailed routing solution with optimized wire-length and via count.
+
+The constraints needed in using TritonRoute are the route guide honouring, connectivity constraints and design rules. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/14.JPG)
+
+TritonRoute handles connectivity through 2 ways, through either AP, Access Point, or APC, Access Point Cluster. Access pointy is an on-grid point on the metal layer of the route guide, and is used to connect to lower-layer segments, upper-layer segments, pins or IO ports. Access Point Cluster is a union of all Access Points derived from same lower-layer segment, upper-layer guide, a pin or an IO port. The access point refers to the point where the via can be placed to allow connectivity between layers. The objective of the MILP, Mixed Integer Liner Programming is to connect one access point to another optimally. First is to choose one of the access points where the via should be dropped, and second is determining how the first access point will connect to the next access point.
+
+</details>
+
+</details>
+
+</details>
+
+<details><summary> Lab Day 19 </summary>
+
+<details><summary> Power Distribution Network and routing  </summary>
+
+<details><summary> Lab steps to build power distribution network </summary>
+
+If you want to retain the configurations form the last openlane job, you need to use the command “prep -design <design> -tag <tag>”. If you want to create a fresh run with new configurations but without changing the tag name, you need to use the command “prep -design <design> -tag <tag> -overwrite”. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/101.JPG)
+
+Ensure that the current_def is on the CTS stage,  in order to run the power distribution network PDN, before we can perform the routing. We use the proc “gen_pdn” to generate the power distribution network for the design. 
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/103.JPG)
+
+The LEF files and DEF files are read, then it will create the gird and transfer the power and ground. The standard cells will be placed in the standard cell rows, and for the rows will need to have the power and ground lines along the side rows where the std cells are placed.  Then the straps are provided for the chip. From the power pads, the power goes into the straps, and from the straps, it drills down into the standard cell rails. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/102.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/105.JPG)
+
+Error encountered during “gen_pdn”. Stage cannot move on to perform routing as current_def has not changed to floorplan.pdn.
+
+</details>
+
+<details><summary>  Lab steps from power straps to std cell power </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/104.JPG)
+
+The power and ground signals first go into the pads, into the power rings, then through the straps, and lastly, through the rails. 
+
+</details>
+
+<details><summary> Basics of global and detail routing and configure TritonRoute </summary>
+
+To perform the routing, we use the command “run_routing”, ensure that the CURRENT_DEF is set to the floorplan.pdn.def.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/106.JPG)
+
+The variables that can be configured within the routing stage. The routing strategy specifies the optimization mode to be used in TritonRoute. There are 5 routing strategies that can be used in Tritonroute, a value of 0-3 specifies TritonRoute to use engine 30. If the value is set to 14, then TritonRoute 14 will be used. Using the option 0, the default value, means the routing will not be optimal, but there will be a very low runtime and memory consumption. Using TritonRoute 14 may take up to an hour. 
+
+</details>
+
+</details>
+
+<details><summary> Triton Route Features </summary>
+
+<details><summary> Routing topology algorithm and final files list post route </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/15.JPG)
+
+Algorithm which is used in optimized routing. For each APC, the algorithm needs to find the cost associated with the distance between 2 APCs, and then a minimum spanning tree, MST, between the APCs and the costs. The objective of the algorithm is basically to find the minimal and most optimal point between the 2 APCs. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/107.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/108.JPG)
+
+Once the routing has completed, we can see the memory that was taken up by the tool and the number of DRC violations in the design port routing. For the run in the image above where the routing strategy was set to 0, less time was taken but resulted in several drc violations. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/109.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/110.JPG)
+
+The fast_route guide is used by the triton_route tool for detail placement to perform the placement within the nets in the route guide. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/111.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/112.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/113.JPG)
+
+The next step after routing would be to extract the parasites of the design, and these parasictic analysis need to be done outside openlane,  as they have not yet been integrated. We need to first enter the SPEF_EXTRACTOR dir. To perform the step we also need top declare the LEF and the DEF, and using the command “python3 main.py <lef> <def>”, and this will create the spef file. The SPEF file will be located in the same folder as the DEF file. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day19/114.JPG)
+
+As our netlist becomes changed due to the antenna diodes being added into the netlist, our db needs to be rewritten and loaded again with the new verilog file read in for the post_route sta analysis, loaded alongside with the SDC file, and the newly generated SPEF file. We need to check for congestion, timing and then on the DRCs. 
+
+</details>
+
+</details>
+
+</details>
+
 
