@@ -38,7 +38,7 @@ Content of training:
 
 - [Day_18: Pre-Layout STA and Importance of good clock tree](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_18-pre-layout-sta-and-importance-of-good-clock-tree)
 
-
+- [Day_19: Final Steps for RTL2GDS](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_19-final-steps-for-rtl2gds)
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
