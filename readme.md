@@ -40,6 +40,8 @@ Content of training:
 
 - [Day_19: Final Steps for RTL2GDS](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_19-final-steps-for-rtl2gds)
 
+- [Day_20: Floorplanning and Power Planning](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_20-floorplanning-and-power-planning-labs)
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
