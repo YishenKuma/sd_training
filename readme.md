@@ -4892,4 +4892,100 @@ As our netlist becomes changed due to the antenna diodes being added into the ne
 
 </details>
 
+## **Day_20: Floorplanning and power planning labs**
 
+<details><summary> Lecture Day 20 </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/a1.JPG)
+
+The physical design flow within the RTL2GDS flow involves partitioning the design, chip planning, performing placement and  clock tree synthesis, signal routing and performing timing closure.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/a2.JPG)
+
+Some of the files that are needed within the physical design flow include:
+
+* .tf: technology file, describe the units, layers, design rules, capacitances of the design 
+
+* .lib: reference libraries, contains the cell timing and functionality, for the netlist and design rule constraints
+
+* .gds: graphical data sheet, contains the physical layout information, which is used to create the reference libraries
+
+* .tdf: top design format, contains the pin and port information
+
+* sdc: constraints file, contains timing constraints and clock definitions
+
+* .v: .vhd, contains the connectivity information of the design
+
+The outputs that would be generated from the physical design flow are: 
+
+* .sdf: synopsys design file, generated post floorplan
+
+* .spef: synopsys parasitic ectract format, contains parasitic information
+
+* .v: updated flattened verilog post floorplan and placement
+
+* .hv: hierarchical verilog 
+
+*. gds: contains physical layout information
+
+</details>
+
+<details><summary> Lab Day 20 </summary>
+
+IN order to perform the floorplanning and power planning of  the vsdbabysoc design, we must ensure the synthesis is performed with the relevant constraints applied as well as all the relevant lib files read in. For this we need to clone the necessary github directories https://github.com/Devipriya1921/VSDBabySoC_ICC2.git, “https://github.com/bharath19-gs/synopsys_ICC2flow_130nm” and “https://github.com/bharath19-gs/VSDBabySoC_ICC2.git”.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/2.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/3.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/4.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/5.JPG)
+
+Once that is done, we need to open up DC shell to perform synthesis on our design by sourcing the file vsdbabysoc.tcl, with the updated file paths, for all files that is to be used within the tcl file. This will generate the necessary synthesized verilog file, using the command “source vsdbabysoc.tcl”. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/6.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/6a.JPG)
+
+The next step would be to perform the physical design by sourcing the provided top.tcl script provided, with making the necessary changes to the paths of the local files. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/7.JPG)
+
+Error encountered in run, no core area and standard cell area set in design, need to review and ensure all correct collaterals sourced
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/8.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/9.JPG)
+
+Removing references of Nangate and replacing with LEF files of sky130 files, as well as for asvddac and asvdpll.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/10.JPG)
+
+Error still encountered in flow during legalize placement step, no cells being legalized.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/11.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/12.JPG)
+
+Cells within design naming not matching with cell naming within top.tcl.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/13.JPG)
+
+Performing legalize placement with appropriate cells still show issue in design, no cells have been placed within design yet.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/14.JPG)
+
+Non fixed macros present in the design.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/17.JPG)
+
+Macros locations in the design.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/21.JPG)
+
+No standard cells incurred within design. Need to review collaterals and debug.
+
+</details>
