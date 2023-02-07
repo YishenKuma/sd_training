@@ -4962,6 +4962,8 @@ Error encountered in run, no core area and standard cell area set in design, nee
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/9.JPG)
 
+Stage error encountered: NDM lib creation, need to ensure correct files are being used for the design
+	
 Removing references of Nangate and replacing with LEF files of sky130 files, as well as for asvddac and asvdpll.
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/10.JPG)
@@ -4986,7 +4988,11 @@ Non fixed macros present in the design.
 
 Macros locations in the design.
 
+Stage error encountered: Placement. wrong file sourced
+	
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/21.JPG)
+	
+Stage error encountered: Incorrect files can cause error to occur anyuwhere in deisgm, for this case, it occured during library creation
 
 The LEF file for the design needs to be ensured appropriate for the design, or else the lm_shell will fail during the library creation stage. For this, the LEF file used was obtained from : https://github.com/bharath19-gs/synopsys_ICC2flow_130nm/tree/main/synopsys_skywater_flow_nominal/LEF, for the sky130_v5_7magic.lef, which has fixed on two issues causing error in the flow. 
 
@@ -4999,6 +5005,8 @@ We will encounter an error such as this if the LEF file is having issues such as
 > multiple END library definitions were made in the originally used LEF file
 
 > there were multiple definition of the same cells for different versions, in the originally used LEF file
+	
+Stage error encountered: NDM lib creation
 
 The tech file needs to be appropriately set as well for the sky130 technology, obtained from the directory: https://github.com/bharath19-gs/synopsys_ICC2flow_130nm/tree/main/synopsys_skywater_flow_nominal. The technology file is the most important input for the tool in physical design, as it provides the tech specific information, such as the names and physical and electrical characteristics of each metal/via layers and routing design rule.
 
@@ -5013,16 +5021,22 @@ This may be encountered in the design where no cells get placed, be sure to sour
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/24.JPG)
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/25.JPG)
+	
+Stage error encountered: Reading Constraints
 
 We need to make a few changes in the top.tcl as well for the placement and legalize_placement to occur successfully. We need top run the legalize_placement command after the create_placement command, as the cells cannot be moved until they are placed, and they are placed during the create placement command. We also need to include the -floorplan option when using the create_placement command to run the design planning styled placement.
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/26.JPG)
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/27.JPG)
+	
+Stage error encountered: PG creation
 
 We will also need to change some of the layer definitions within the icc2_common_setup.tcl to adhere to the sky130 tech file, as the previous tech file layer definitions were from metal1 -metal10, but for the sky130, we have the naming convention of met1 – met5, so we need to change the parameters so that our run will be free of errors. If the naming convention is not corrected to match the tech file, then the flow will fail during the power grid creation stage. 
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/28.JPG)
+	
+Stage error encountered: Place, CTS and Route
 
 The naming for the filler cells within the top.tcl needs to be corrected as well to reflect the filler cells of sky130 pdk.
 
@@ -5049,7 +5063,7 @@ We convert the clock object from ideal to propagated using the command “set_pr
 The report for “estimate_timing” was not generated, as there were no estimate timing rules detected on nets.
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/36.JPG)
-
+	
 Using the command “report_constraints -all_violators -nosplit -verbose -significant_digits 4 > violators.rpt”, we can view all violating paths within the design. 
 
 </details>
