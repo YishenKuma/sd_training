@@ -4988,6 +4988,68 @@ Macros locations in the design.
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/21.JPG)
 
-No standard cells incurred within design. Need to review collaterals and debug.
+The LEF file for the design needs to be ensured appropriate for the design, or else the lm_shell will fail during the library creation stage. For this, the LEF file used was obtained from : https://github.com/bharath19-gs/synopsys_ICC2flow_130nm/tree/main/synopsys_skywater_flow_nominal/LEF, for the sky130_v5_7magic.lef, which has fixed on two issues causing error in the flow. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/x5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/x3.JPG)
+
+We will encounter an error such as this if the LEF file is having issues such as the ones listed below.
+
+> multiple END library definitions were made in the originally used LEF file
+
+> there were multiple definition of the same cells for different versions, in the originally used LEF file
+
+The tech file needs to be appropriately set as well for the sky130 technology, obtained from the directory: https://github.com/bharath19-gs/synopsys_ICC2flow_130nm/tree/main/synopsys_skywater_flow_nominal. The technology file is the most important input for the tool in physical design, as it provides the tech specific information, such as the names and physical and electrical characteristics of each metal/via layers and routing design rule.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/22.JPG)
+
+Within the same directory, we will get the itf file, which is used to generate the tluplus file for the design, that can be used by parasitic extractor in the PnR tool for modelling. The TLUplus models enables accurate RC extraction results by including the effects of width, space, density, and temperature on the resistance coefficients.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/23.JPG)
+
+This may be encountered in the design where no cells get placed, be sure to source in the pns_example.tcl within the flow. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/24.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/25.JPG)
+
+We need to make a few changes in the top.tcl as well for the placement and legalize_placement to occur successfully. We need top run the legalize_placement command after the create_placement command, as the cells cannot be moved until they are placed, and they are placed during the create placement command. We also need to include the -floorplan option when using the create_placement command to run the design planning styled placement.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/26.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/27.JPG)
+
+We will also need to change some of the layer definitions within the icc2_common_setup.tcl to adhere to the sky130 tech file, as the previous tech file layer definitions were from metal1 -metal10, but for the sky130, we have the naming convention of met1 – met5, so we need to change the parameters so that our run will be free of errors. If the naming convention is not corrected to match the tech file, then the flow will fail during the power grid creation stage. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/28.JPG)
+
+The naming for the filler cells within the top.tcl needs to be corrected as well to reflect the filler cells of sky130 pdk.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/29.JPG)
+
+Flow for top.tcl has successfully completed. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/30.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/31.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/32.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/34.JPG)
+
+Design shown in the ICC2 gui.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/33.JPG)
+
+We convert the clock object from ideal to propagated using the command “set_propagated_clock [all_clocks]”. And then we can view the timing report for the design with the “report_timing” command.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/35.JPG)
+
+The report for “estimate_timing” was not generated, as there were no estimate timing rules detected on nets.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/36.JPG)
+
+Using the command “report_constraints -all_violators -nosplit -verbose -significant_digits 4 > violators.rpt”, we can view all violating paths within the design. 
 
 </details>
