@@ -5043,6 +5043,8 @@ The naming for the filler cells within the top.tcl needs to be corrected as well
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/29.JPG)
 
 Flow for top.tcl has successfully completed. 
+	
+![](https://github.com/YishenKuma/sd_training/blob/main/day20/30.JPG)
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20/31.JPG)
 
