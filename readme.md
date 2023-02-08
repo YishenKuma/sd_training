@@ -42,7 +42,7 @@ Content of training:
 
 - [Day_20: Floorplanning and Power Planning](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_20-floorplanning-and-power-planning-labs)
 
-- [Day_21: Placement and CTS labs]()
+- [Day_21: Placement and CTS labs](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_21-placement-and-cts-labs)
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
