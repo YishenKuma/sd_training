@@ -5068,7 +5068,7 @@ Using the command “report_constraints -all_violators -nosplit -verbose -signif
 
 </details>
 
-	## **Day_21: Floorplanning and power planning labs**
+## **Day_21: Floorplanning and power planning labs**
 
 <details><summary> Lecture Day 21 </summary>
 
@@ -5114,7 +5114,7 @@ The quality checks for CTS stage is to check the design skew, pulse width, duty 
 
 <details><summary> Udemy course: CTS </summary>
 
-
+	
 
 </details>
 
