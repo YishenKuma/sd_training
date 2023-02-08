@@ -5067,3 +5067,143 @@ The report for “estimate_timing” was not generated, as there were no estimat
 Using the command “report_constraints -all_violators -nosplit -verbose -significant_digits 4 > violators.rpt”, we can view all violating paths within the design. 
 
 </details>
+
+	## **Day_21: Floorplanning and power planning labs**
+
+<details><summary> Lecture Day 21 </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/x1.JPG)
+
+PLacement is the process of determining the location of standard cells present in the netlist by placing these cells in the core area. 
+
+PLacement plays a key role as good placemnet of the cells will lead to good routing during the PnR stage. 
+
+The stages in placement include global placement, legailization, and detailed placement. 
+
+> global placement is to generate a rough placement in the core area that may violate some placement constraints, while maintaining a global view of the whole netlist. 
+
+> Legalization, or also known as refine placement, aims to solve the placement violations during global placement by moving moduke to legal loactions on the design, based on the timing, power and congestion.
+
+> Detail placment further improves on the refined placement, by iteratively rearranging a small group of modules in a region while keeping other modules in the other regions fixed. All th fional quality improvements will occur in this stage, congestion, timing and  power need to be taken care of in this stage.
+
+The quality checks or objectives for the placement stage would be to ensure low congestion, high performance, good timing and routability, and fast runtime. 
+
+Clock tree synthesis stage takes in the placement database and CTS specification file, in order to build the clock tree for the design, in order to propagate te clock signals to all the lements in the design that require clcok signal, and ensure minimal difference between he end points in the clock tree.
+ 
+> placement database includes contains the placement completed netlist, def, lef, upf and other files used in the placement database. There will be no more standard cell placemnt on the dabatabase after this point. 
+
+> The CTS spec files hold info on the info on buffers and inverters which are used to balance the clock tree, as well as skew group information, target skew,  maximum target transition, and other timing constraints. There will also be via informatuion to be used for the clock nets routing, as well as rule definitions. 
+
+The steps involbed in the CTS stage inlcude, clustering, DRV fixing, Insertion Delay reduction, power reduction, balancing, and post-conditioning. 
+
+> clustering creates the skew groups based on the spec file
+
+> DRV fixing is to handle design rule violation such as max capacitance, max length, max trabistion, max fanout
+
+> Insertion delay reduction to minimize the insertion delay as much as possible
+
+> power reduction, as clock signals will have a higher consumption
+
+> balancing the the clock nets through clock buffers and inverters
+
+> post conditioning to handle anymore design rule violations found in the design
+
+The quality checks for CTS stage is to check the design skew, pulse width, duty cycle, latency, clock tree powre, signal integrity, and crosstalk. Then we will need to perform timing analysis and fixing. 
+
+</details>
+
+<details><summary> Udemy course: CTS </summary>
+
+
+
+</details>
+
+<details><summary> Lab Day 20 </summary>
+
+Once the floorplanning is completed, the constraints and the parasitic files have been read, the placement stage will begin. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l1.JPG)
+
+“plan.place.auto_generate_blockages” option specifies whetehre ti create auto-derived soft placement blockages for the design. These soft blockages are needed so that standard cells do not get added in narrow channels between hard macros. These blockages are usually added after deisgn planning is finished and the block is ready to go to implementation. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l2.JPG)
+
+The create placement command is used to create the coarse placement for the design. The floorplan option runs the design planning styled placement. The placement effort is set to high, and the congestion and timing driven options are used to run timing-driven and congestion-driven placement. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l3.JPG)
+
+Legalize_placement is used to shift the placement of the cells in the design placed during the coarse placement. The design needs to contain a floorplan with a site array specified, as well as all the cells and blockages having an initial placement for the command to be able to run.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l4.JPG)
+
+Placement report generated after the legalize_placement is run, no overlaps, physical hierarchy violations, and no voltage area violations. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l5.JPG)
+
+Next, we have the pin placement for the design, which is done by sourcing the pns.tcl file that was modified in the previous lab to match the current technology file for the power grid creation.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l6.JPG)
+
+Check design for pre-pin placement, having 3 warnings to be reviewed.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l7.JPG)
+
+Preferred port locations that was reported out. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l8.JPG)
+
+Placement for the ports reported.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l9.JPG)
+
+Then we perform the timing estimation for the design. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l10.JPG)
+
+Estimate timing performed.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l11.JPG)
+
+Post estimated timing report for the design shows a violated slack of -0.48.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l12.JPG)
+
+Post estimated timing qor showing 29 violating paths, 368 nets with violations, 364 max trans violations, and 184 max cap violations.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l13.JPG)
+
+Post estimated timing qor summary. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l14.JPG)
+
+Here we perform the final steps which is placement, CTS and routing.
+
+The “place.coarse.continue_on_missing_scandef” option is set true, checking prior to coarse placement will be disabled, likely because we had performed coarse_placement earlier in the flow. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l14.JPG)
+
+> standard cells placed in the design with names of “{core/CPU_Xreg_value_a4_reg[19][15]} core/U1773 core/U1772 core/U1740 {core/CPU_Xreg_value_a4_reg[19][26]}”
+
+“place_opt” places the current design, performs optimization for the placed design based on timing, electrical drc violations, area, power and routability. It also performs incremental placement to optimize the timing an routability, and finally legalizes the design placements at the end. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l16.JPG)
+
+> clock tree built for design 
+
+“clock_opt” synthesizes and optimizes the clock trees, completes the detail routuing of the clock trees, and then performs optimization based on the timing, electrical drc violations, area, power, and routability based on the actual propagated clock latencies, then finally legalizes the design placement. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l17.JPG)
+
+> routing tracks created on the design 
+
+“route_auto” command is used to run global routing, track assignment, and lastly performs the detail routing, all in one step. In our design, we use a max of 5 iterations for the optimization of the routing, the default value is set to be 40. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l18.JPG)
+
+> physical only filler cells added in the design 
+
+“create_stdcell_fillers” command is used to insert the filler cells into the design, filling in the empty spaces in the standard cell rows with instances of filler cells from within the filler cell library specified, in our case is the sky130 filler cells.
+
+</details>
+
+
