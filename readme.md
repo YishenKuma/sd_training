@@ -42,6 +42,8 @@ Content of training:
 
 - [Day_20: Floorplanning and Power Planning](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_20-floorplanning-and-power-planning-labs)
 
+- [Day_21: Placement and CTS labs]()
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
@@ -5068,7 +5070,7 @@ Using the command “report_constraints -all_violators -nosplit -verbose -signif
 
 </details>
 
-## **Day_21: Floorplanning and power planning labs**
+## **Day_21: Placement and CTS labs**
 
 <details><summary> Lecture Day 21 </summary>
 
@@ -5180,7 +5182,7 @@ Here we perform the final steps which is placement, CTS and routing.
 
 The “place.coarse.continue_on_missing_scandef” option is set true, checking prior to coarse placement will be disabled, likely because we had performed coarse_placement earlier in the flow. 
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day21/l14.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day21/l15.JPG)
 
 > standard cells placed in the design with names of “{core/CPU_Xreg_value_a4_reg[19][15]} core/U1773 core/U1772 core/U1740 {core/CPU_Xreg_value_a4_reg[19][26]}”
 
