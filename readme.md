@@ -5068,6 +5068,8 @@ The report for “estimate_timing” was not generated, as there were no estimat
 	
 Using the command “report_constraints -all_violators -nosplit -verbose -significant_digits 4 > violators.rpt”, we can view all violating paths within the design. 
 
+</details>
+
 <details><summary> Errors encountered during running design stage through sourcing top.tcl for vsdbabysoc using sky130pdk </summary>
 
 <details><summary> standard cell and core area not specified within design</summary>
@@ -5156,8 +5158,6 @@ Solution: change the name of the filler cells that is appropriate to the technol
 
 </details>
 
-</details>
-	
 </details>
 
 ## **Day_21: Placement and CTS labs**
