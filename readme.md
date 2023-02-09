@@ -5068,6 +5068,96 @@ The report for “estimate_timing” was not generated, as there were no estimat
 	
 Using the command “report_constraints -all_violators -nosplit -verbose -significant_digits 4 > violators.rpt”, we can view all violating paths within the design. 
 
+<details><summary> Errors encountered during running design stage through sourcing top.tcl for vsdbabysoc using sky130pdk </summary>
+
+<details><summary> standard cell and core area not specified within design</summary>
+
+During floorplanning, incorrect technology file and lef files
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/1.JPG)
+
+Error encountered in run, no core area and standard cell area set in design.
+
+Solution: Remove references of Nangate and replacing with LEF files of sky130 files, as well as for asvddac and asvdpll.
+
+The tech file needs to be appropriately set as well for the sky130 technology, obtained from the directory: https://github.com/bharath19-gs/synopsys_ICC2flow_130nm/tree/main/synopsys_skywater_flow_nominal. The technology file is the most important input for the tool in physical design, as it provides the tech specific information, such as the names and physical and electrical characteristics of each metal/via layers and routing design rule.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/2.JPG)
+
+</details>
+
+<details><summary> No cells placed within design </summary>
+
+During read_constraints, wrong file sourced, legalize placement after placement of cells, missing option in create placement
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/3.JPG)
+
+Error still encountered in flow during legalize placement step, no cells being legalized. This is because the pns_example.tcl is not sourced correctly. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/4.JPG)
+
+Cells within design naming not matching with cell naming within top.tcl. legalize placement will not occur as naming convention cells are not the same
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/5.JPG)
+
+Non fixed macros present in the design, need to source correct pns_example.tcl.
+Solution: source correct pns.tcl, create_placement with -floorplan option, legalize_placemenmt after create_placement. We need to make a few changes in the top.tcl as well for the placement and legalize_placement to occur successfully. We need top run the legalize_placement command after the create_placement command, as the cells cannot be moved until they are placed, and they are placed during the create placement command. We also need to include the -floorplan option when using the create_placement command to run the design planning styled placement.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/6.JPG)
+
+</details>
+
+<details><summary> Changes needed in the sky130.lef</summary>
+
+During NDM_library_creation, LEF file needs to be correct or the lm shell will not be able to create the required libs for the design. 
+
+We will encounter an error such as this if the LEF file is having issues such as the ones listed below.
+
+> multiple END library definitions were made in the originally used LEF file
+
+> there were multiple definition of the same cells for different versions, in the originally used LEF file
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/8.JPG)
+
+Solution: For this, the LEF file used was obtained from : https://github.com/bharath19-gs/synopsys_ICC2flow_130nm/tree/main/synopsys_skywater_flow_nominal/LEF, for the sky130_v5_7magic.lef.
+
+</details>
+
+<details><summary> Appropriate TLUplus needs to be used for the design </summary>
+
+We cannot use the TLUplus file for Nangate for the design of sky130
+Solution: Within the https://github.com/bharath19-gs/synopsys_ICC2flow_130nm/tree/main/synopsys_skywater_flow_nominal directory, we will get the itf file, which is used to generate the tluplus file for the design, that can be used by parasitic extractor in the PnR tool for modelling. The TLUplus models enables accurate RC extraction results by including the effects of width, space, density, and temperature on the resistance coefficients.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/9.JPG)
+
+</details>
+
+<details><summary> layer declarations within scripts not matching with technology file </summary>
+
+During PG creation
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/10.JPG)
+
+Solution: The scripts used are tailored for the nangate technology file, therefor we need to modify the scripts to match the layer names within the sky130 tech file. The previous tech file layer definitions were from metal1 -metal10, but for the sky130, we have the naming convention of met1 – met5, so we need to change the files having the wrong layer declarations.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/11.JPG)
+
+</details>
+
+<details><summary> Incorrect filler cell naming</summary>
+
+During place, CTS, and route stage
+
+Solution: change the name of the filler cells that is appropriate to the technology being used
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20e/12.JPG)
+
+</details>
+
+</details>
+	
 </details>
 
 ## **Day_21: Placement and CTS labs**
@@ -5111,12 +5201,6 @@ The steps involbed in the CTS stage inlcude, clustering, DRV fixing, Insertion D
 > post conditioning to handle anymore design rule violations found in the design
 
 The quality checks for CTS stage is to check the design skew, pulse width, duty cycle, latency, clock tree powre, signal integrity, and crosstalk. Then we will need to perform timing analysis and fixing. 
-
-</details>
-
-<details><summary> Udemy course: CTS </summary>
-
-	
 
 </details>
 
