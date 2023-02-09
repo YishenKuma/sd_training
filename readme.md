@@ -5356,7 +5356,7 @@ We can see from our QOR comparison before and after the eco step, there is an in
 
 </details>
 
-## **Day_22: *CTS analysis labs*
+## ** Day_22:CTS analysis labs **
 
 <details><summary> Lecture Day 22 </summary>
 
@@ -5364,7 +5364,7 @@ Clock tree synthesis is method of distrubiting the clock equally among all seque
 
 The goal in performing CTS is to minimize the skew and insertion delay. 
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day22/1.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/1.jpg)
 
 The cells and objects should all be placed on the design before the CTS stage. Within the CTS stage, we may have Pre-CTS Clock tree power optimization, clock tree syntyhesis, timing optimization, and clock net routing.
 
