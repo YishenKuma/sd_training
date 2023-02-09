@@ -5356,7 +5356,7 @@ We can see from our QOR comparison before and after the eco step, there is an in
 
 </details>
 
-## ** Day_22:CTS analysis labs **
+## **Day_22: CTS analysis labs**
 
 <details><summary> Lecture Day 22 </summary>
 
