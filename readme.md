@@ -46,7 +46,7 @@ Content of training:
 
 - [Day_20 + 21 optimization](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day-20--day_21-design-optimization)
 
-- [Day_22: CTS analysis labs]()
+- [Day_22: CTS analysis labs](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_22-cts-analysis-labs)
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
