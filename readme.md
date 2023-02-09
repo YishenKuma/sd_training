@@ -46,6 +46,8 @@ Content of training:
 
 - [Day_20 + 21 optimization](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day-20--day_21-design-optimization)
 
+- [Day_22: CTS analysis labs]()
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
@@ -5206,7 +5208,7 @@ The quality checks for CTS stage is to check the design skew, pulse width, duty 
 
 </details>
 
-<details><summary> Lab Day 20 </summary>
+<details><summary> Lab Day 21 </summary>
 
 Once the floorplanning is completed, the constraints and the parasitic files have been read, the placement stage will begin. 
 
@@ -5354,5 +5356,72 @@ We can see from our QOR comparison before and after the eco step, there is an in
 
 </details>
 
+## **Day_22: *CTS analysis labs*
+
+<details><summary> Lecture Day 22 </summary>
+
+Clock tree synthesis is method of distrubiting the clock equally among all sequential parts of a VLSI design. And in order to distribute them evenly, we need to ensure that the delays to all the clcok input pins get balanced.
+
+The goal in performing CTS is to minimize the skew and insertion delay. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/1.JPG)
+
+The cells and objects should all be placed on the design before the CTS stage. Within the CTS stage, we may have Pre-CTS Clock tree power optimization, clock tree syntyhesis, timing optimization, and clock net routing.
+
+The balancing needs to be done as different wire lengths for different paths will incur different delays and skews, and CTS aims to handle this while ensuring good PPA.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/2.JPG)
+
+By typing compile_clock_tree, the main command for the lab, which automatically performs the CTS step. Most of the time the algorithm that would be used is the H-tree CTS or mesh CTS, based on the best choice for the design.
+
+To use multisource CTS would be to take up a lot of power consumption.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/3.JPG)
+
+In H-tree algorithm, centers of all the flops in the design are found. The tool traces the clock port to the cenetr points. Then the core is divided into 2 parts, in order to tace both parts and reach to each center. Then the center is formed again, abd divided again to trace till teh centers at boty ends. The step is repeated until the clock pins of all the flops are reached. 
+
+There are a number of checks done for the CTS stage, which include,
+
+> skew check
+
+> pulse width check
+
+> duty cycle check
+
+> latency check
+
+> power check
+
+> crosstalk quality check
+
+> delta delay quality check
+
+> glitch quality check
+ 
+The "check_clock_tree" command is used after the CTS stage, this will check the clock tree structure, constraints, and clock tree exceptions that are needed to check in order to have good QOR, quality of results.
+
+"check_legality" should also be done prior to CTS stage, to ensure the placement is done well, and the design is ready for CTS. 
+
+CTS also some default constraints, if there are no user-specified constraints, including max transition, max capacitance, and max fanout. We can edit this using the command "set_clock_tree_options"
+
+We perform clock tree synthesis using the command "clock_opt" which would comprise of synthesizing the clock tree, performing preroute and postroute clock tree optimization.
+
+The command will optimize the design based on the clock tree built, by performing power optimization, re-synthesize teh clcok tree if needed, adjusts i/o timing, performs RC extraction of the clock nets and copmputes accurate clock arrivakl times, and performs placement and timing optimization. 
+
+This command should be run after running teh "compile_clock_tree" command, and running checks, but the command is not existant in the icc2 tool, so we do not run this command.
+
+similaryly to vcs, cts also has a debug mode, which we can use for icc2 by setting the "cts_use_debug_mode" option to true, this allows us to fix issues interactively as we go through the CTS flow
+
+"report_clock_tree" shows the details on the max global skew, late/early insertion delay, number of levels in the clock tree, number of clock tree references (buffers), as well as clock DRC violations
+
+If we have any clock DRC violations, we need to rerun the step and fix these issues, as these cannot be present for the final product.
+
+"report_clock_timing" will show the actual and relevant skew, latency, interclock latencies and other details for the related paths. 
+
+These report checks should be done before and after clock tree optimization. 
+
+We use the command "check_clock_tree -clocks <clks>" to verify that the clock trees are properly defined before the clock trees are syntehsized. 
+
+</details>
 
 
