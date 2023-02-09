@@ -5289,7 +5289,68 @@ The “place.coarse.continue_on_missing_scandef” option is set true, checking 
 > physical only filler cells added in the design 
 
 “create_stdcell_fillers” command is used to insert the filler cells into the design, filling in the empty spaces in the standard cell rows with instances of filler cells from within the filler cell library specified, in our case is the sky130 filler cells.
+	
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/a1.JPG)
+
+Core utilization for design is set to be 7%.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/a2.JPG)
+
+Utilization ratio of design: 0.27%
 
 </details>
+
+## **Day 20 + Day_21 design optimization**
+
+<details><summary> Lab 20 + Lab 21 Optimization </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/2.JPG)
+
+Constraints for design is read in before placement is performed. We need to modify the constrains such that the “set_clock_latency” does not get applied. We run remove this in place and route flow only, the verilog netlist remains the same.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/3.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/5.JPG)
+
+The timing report that will be generated will be using ideal clocks for the analysis. Our post estimated timing pre-CTS report is slightly improved but is still violated.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/4.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/6.JPG)
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/10.JPG)
+
+Once CTS stage is completed, we need to convert the ideal clocks into propagated clocks, it should be ideal only for post placement timing analysis. Once we rerun the flow, we can observe the changes on the timing paths of the design. Now from our timing report post CTS, we can see that the timing for the design has not been improved, with the changes on the remove_clock_latency constraints. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/11.JPG)
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/12.JPG)
+
+Fanout constraint not set on design, sdc file needs to be reviewed to optimize design. As a result path is having paths with high fanouts 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/7.JPG)
+
+One way we can do this is by upsizing the cells based on the post timing report based on the analysis column. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/13.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/17.JPG)
+
+We will try to optimize the path “-from core/CPU_is_add_a3_reg -to core/CPU_Xreg_value_a4_reg[27][31]” based on the analysis shown in the post estimated timing report pre CTS stage. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/14.JPG)
+
+The timing slack has been improved but still violated for the path after the eco change is implemented.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/15.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/16.JPG)
+
+We can see from our QOR comparison before and after the eco step, there is an increase in combinational area, as well as an increase in hold violations. But there is a reduction in max trans and max cap violations.
+
+</details>
+
 
 
