@@ -5424,4 +5424,36 @@ We use the command "check_clock_tree -clocks <clks>" to verify that the clock tr
 
 </details>
 
+<details><summary> Lab Day 22 </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x1.JPG)
+
+The checks to be performed were added into the top.tcl before and after the CTS stage for checking the quality of CTS and verifying readiness of design for CTS.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x2.JPG)
+
+Firstly is to check legality, before the CTS is performed, to ensure the placement is done well and design is ready for CTS. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x4.JPG)
+
+Ensure legalize_placement command is already run prior to check_legality, or else run check will fail.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x3.JPG)
+
+Check_clock_tree showing 1 warning CTS-904 for pll cell not having LEQ cell specified. Pending to check.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x5.JPG)
+
+Report_clock_tree_options shows us the constraints applied during the CTS stage.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x6.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day22/x8.JPG)
+
+“report_clock_timing -type {interclock_skew/latency/skew/transition/summary}” for the design
+
+</details>
+
 
