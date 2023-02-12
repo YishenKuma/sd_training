@@ -5456,4 +5456,47 @@ Report_clock_tree_options shows us the constraints applied during the CTS stage.
 
 </details>
 
+## **Day_23: *Clock Gating Technique and Routing*
+
+<details><summary> Lecture Day 23 </summary>
+
+### Clock gating
+
+When we perform clock tree synthesis, we also need to be taken into the consideration of the power consumption, especially in designs with a large number of clocks, meaning that in the synthesizing of a clock tree, there will be a greater number of buffers in the design, inducing a larger area, and also a larger power usage. 
+
+One way to be able to handle the complexity of task of building the clock tree for the entire design is by, partitioning the design into smaller parts, and performing the clock tree synthesis individually for the clocks, and then in the family level, have a fully completed routed tree. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day23/1.JPG)
+
+Partitioning of the design is done, and then later the buffers for the clock tree will be inserted.
+
+We need to not only keep in mind area and timing, but we also need to beware the power factor when doing CTS, for designs with high number of inverters or buffers.
+
+One way that we can perform power aware CTS is through the clock gating technique using AND, OR and universal NAND gates. These cells are used to gate the clock in order to save power. One thing to note, is that 50% of dynamic power was found to be lost from clock related circuits. Our design may have unnecessary power usage on the clock circuits, even if it is not being used all the time, the switching activity of clocks that take up power may not be used by the design for some instances. This is why clock gating is a useful technique for power handling, as the clocks are gated when they are not used by the design.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day23/2.JPG)
+
+From the diagram, we can understand that the functional unit will only take in the CLK as an input based on the clock gate, which is dependant on the EN feed by the activation action, Fcg.
+
+Clock gating in an industry standard will be done at the synthesis stage, and then optimized in the implementation stage (physical design).
+
+### Routing
+
+After CTS is performed, we need to ensure that there is a physical connection between all the signal pins in the design through the use of the metal layers, this is known as routing.
+
+There are three types of routing, which include P/G routing, Clock Routing, and Signal Routing. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day23/3.JPG)
+
+> P/G routing
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day23/4.JPG)
+
+> clock routing
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day23/5.JPG)
+
+> signal routing, including global and detailed routing
+
+</details>
 
