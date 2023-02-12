@@ -50,6 +50,8 @@ Content of training:
 
 - [Day_23: Clock Gating Technique and Routing](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_23-clock-gating-technique-and-routing)
 
+- [Day_24: Timing violations and ECO]()
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
@@ -5306,58 +5308,6 @@ Utilization ratio of design: 0.27%
 
 </details>
 
-## **Day 20 + Day_21 design optimization**
-
-<details><summary> Lab 20 + Lab 21 Optimization </summary>
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/1.JPG)
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/2.JPG)
-
-Constraints for design is read in before placement is performed. We need to modify the constrains such that the “set_clock_latency” does not get applied. We run remove this in place and route flow only, the verilog netlist remains the same.
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/3.JPG)
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/5.JPG)
-
-The timing report that will be generated will be using ideal clocks for the analysis. Our post estimated timing pre-CTS report is slightly improved but is still violated.
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/4.JPG)
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/6.JPG)
- 
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/10.JPG)
-
-Once CTS stage is completed, we need to convert the ideal clocks into propagated clocks, it should be ideal only for post placement timing analysis. Once we rerun the flow, we can observe the changes on the timing paths of the design. Now from our timing report post CTS, we can see that the timing for the design has not been improved, with the changes on the remove_clock_latency constraints. 
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/11.JPG)
- 
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/12.JPG)
-
-Fanout constraint not set on design, sdc file needs to be reviewed to optimize design. As a result path is having paths with high fanouts 
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/7.JPG)
-
-One way we can do this is by upsizing the cells based on the post timing report based on the analysis column. 
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/13.JPG)
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/17.JPG)
-
-We will try to optimize the path “-from core/CPU_is_add_a3_reg -to core/CPU_Xreg_value_a4_reg[27][31]” based on the analysis shown in the post estimated timing report pre CTS stage. 
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/14.JPG)
-
-The timing slack has been improved but still violated for the path after the eco change is implemented.
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/15.JPG)
-
-![](https://github.com/YishenKuma/sd_training/blob/main/day20a/16.JPG)
-
-We can see from our QOR comparison before and after the eco step, there is an increase in combinational area, as well as an increase in hold violations. But there is a reduction in max trans and max cap violations.
-
-</details>
-
 ## **Day_22: CTS analysis labs**
 
 <details><summary> Lecture Day 22 </summary>
@@ -5501,4 +5451,85 @@ There are three types of routing, which include P/G routing, Clock Routing, and 
 > signal routing, including global and detailed routing
 
 </details>
+	
+## **Day_24: Timing violations and ECO **
+
+<details><summary> Lecture Day 24 </summary>
+
+ECO stands for Engineering Change Order, which are essentially last minute changes for the design to fix any issues found, instead of fixing them at the start and rerunning the flow, which would take too much time and resources.
+
+The RTL code will be modified for a small change to fix issues seen at the end, and these changes will need to pass all the verifications before it can be passed to layout. This ECO will need to pass the formal and functional verification before the layout can be edited. The implementation of the ECO in the layout should fix and seal all the sign-off checks that were not done during the physical design flow. Make sure the ECO does not incur any new issues in the design as well.
+
+There are various strategies in designing an ECO. The steps in implementing an ECO are, firstly, investigating the problem using the latest database, then, generating the ECO to address the problem. Third, implement the ECO on the latest database. Lastly, save the database for future, once the implementation is done and problem is fixed. The strategies for ECO include:
+
+> Margin Based Fixing (DRV, max trans, max cap, setup and hold violations)
+
+> Selective endpoint biased fixing (with and without margin/ slack range)
+
+> slack based fixing (setup/hold target slack, max slack)
+
+> fix ‘n’ number paths (number of paths per group(max_paths)/ endpoint(nworst))
+
+> GBA, group based, and PBA, paths based, fixing
+
+> Full chip vs reg2reg fixing
+
+> leakage fixing using HVT
+
+> Hierarchical ECO (top level/ individual/ replicated hierarchies/ all)
+
+> physical aware ECO (routing congestion aware, cell legalization, buffer on route)
+
+</details>
+
+<details><summary> Lab Day 24 </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/2.JPG)
+
+Constraints for design is read in before placement is performed. We need to modify the constrains such that the “set_clock_latency” does not get applied. We run remove this in place and route flow only, the verilog netlist remains the same.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/3.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/5.JPG)
+
+The timing report that will be generated will be using ideal clocks for the analysis. Our post estimated timing pre-CTS report is slightly improved but is still violated.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/4.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/6.JPG)
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/10.JPG)
+
+Once CTS stage is completed, we need to convert the ideal clocks into propagated clocks, it should be ideal only for post placement timing analysis. Once we rerun the flow, we can observe the changes on the timing paths of the design. Now from our timing report post CTS, we can see that the timing for the design has not been improved, with the changes on the remove_clock_latency constraints. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/11.JPG)
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/12.JPG)
+
+Fanout constraint not set on design, sdc file needs to be reviewed to optimize design. As a result path is having paths with high fanouts 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/7.JPG)
+
+One way we can do this is by upsizing the cells based on the post timing report based on the analysis column. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/13.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/17.JPG)
+
+We will try to optimize the path “-from core/CPU_is_add_a3_reg -to core/CPU_Xreg_value_a4_reg[27][31]” based on the analysis shown in the post estimated timing report pre CTS stage. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/14.JPG)
+
+The timing slack has been improved but still violated for the path after the eco change is implemented.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/15.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20a/16.JPG)
+
+We can see from our QOR comparison before and after the eco step, there is an increase in combinational area, as well as an increase in hold violations. But there is a reduction in max trans and max cap violations.
+
+</details>
+
 
