@@ -5392,10 +5392,6 @@ Ensure legalize_placement command is already run prior to check_legality, or els
 
 Check_clock_tree showing 1 warning CTS-904 for pll cell not having LEQ cell specified. Pending to check.
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day22/x5.JPG)
-
-Report_clock_tree_options shows us the constraints applied during the CTS stage.
-
 ![](https://github.com/YishenKuma/sd_training/blob/main/day22/x6.JPG)
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day22/x7.JPG)
