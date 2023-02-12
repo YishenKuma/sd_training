@@ -5452,7 +5452,7 @@ There are three types of routing, which include P/G routing, Clock Routing, and 
 
 </details>
 	
-## **Day_24: Timing violations and ECO **
+## **Day_24: Timing violations and ECO**
 
 <details><summary> Lecture Day 24 </summary>
 
