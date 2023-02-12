@@ -44,13 +44,11 @@ Content of training:
 
 - [Day_21: Placement and CTS labs](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_21-placement-and-cts-labs)
 
-- [Day_20 + 21 optimization](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day-20--day_21-design-optimization)
-
 - [Day_22: CTS analysis labs](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_22-cts-analysis-labs)
 
 - [Day_23: Clock Gating Technique and Routing](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_23-clock-gating-technique-and-routing)
 
-- [Day_24: Timing violations and ECO]()
+- [Day_24: Timing violations and ECO](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_24-timing-violations-and-eco)
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
