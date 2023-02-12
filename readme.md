@@ -48,7 +48,7 @@ Content of training:
 
 - [Day_22: CTS analysis labs](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_22-cts-analysis-labs)
 
-- [Day_23: Clock Gating Technique and Routing]()
+- [Day_23: Clock Gating Technique and Routing](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_23-clock-gating-technique-and-routing)
 
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
