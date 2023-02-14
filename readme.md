@@ -5527,6 +5527,9 @@ We can see from our QOR comparison before and after the eco step, there is an in
 </details>
 
 <details><summary> Adding decap cells into design </summary>
+	
+Decap cells can help to reduce IR drop or reduce noise in mixed signal designs
+temporary capacitors added in the design between power and ground rails to counter functional failures due to dynamic IR drop
 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20j/j1.JPG)
 
