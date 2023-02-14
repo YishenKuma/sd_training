@@ -5526,4 +5526,24 @@ We can see from our QOR comparison before and after the eco step, there is an in
 
 </details>
 
+<details><summary> Adding decap cells into design </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20j/j1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20j/j2.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20j/j4.JPG)
+
+Decap lib cells to be inserted into design, based on modification in top.tcl
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20j/j3.JPG)
+
+> power report before decap cells added
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day20j/j5.JPG)
+
+> power report before decap cells added, reduction in cell internal power, increase in net switching power
+
+</details>
+
 
