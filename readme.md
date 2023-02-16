@@ -50,6 +50,8 @@ Content of training:
 
 - [Day_24: Timing violations and ECO](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_24-timing-violations-and-eco)
 
+- [Day_26: Introduction to mixed-signal flow]()
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
@@ -5546,6 +5548,68 @@ Decap lib cells to be inserted into design, based on modification in top.tcl
 ![](https://github.com/YishenKuma/sd_training/blob/main/day20j/j5.JPG)
 
 > power report before decap cells added, reduction in cell internal power, increase in net switching power
+
+</details>
+
+## **Day_26: Introduction to mixed-signal flow**
+
+<details><summary> Lecture Day 26 </summary>
+
+The most available signal available in nature are analog signals, but a microcontroller or microprocessor will understand or speak based on signals that are either 0’s or 1’s, which are digital signals. In order to allow these microprocessors or microcontrollers to take in analog signals into the design, we need to use ADCs and DACs. The conversion process of and ADC or DAC needs to perform well in order to be able to get a precise number, we will always end up with an offset error which is not healthy for the calculation. The conversion process includes 3 steps, which are, sampling, quantization and encoding. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day26/0.JPG)
+
+> https://www.javatpoint.com/difference-between-analog-signals-and-digital-signals
+
+Analog signals will be more precise, but will have more noise, whereas, digital will have less noise and easier to read, but will have less accuracy and more error content.
+
+We need mixed signal chips to replace the use of bulkier ADCs and DACs in applications, which is able to measure signals with high precision. Mixed signal chips are able to atleast partially deal with input signals whose precise value matter, which includes RF, Analog, Analog to Digital and Digital to Analog conversion. These chips will have a very different design and process and technology demands than normal digital circuits. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day26/1.JPG)
+
+In AMS design flow, there are 2 paths, the analog blocks an digital blocks. The analog and digital blocks go through similar but different paths but end up at mixed signal analysis after simulation is performed. Then the digital and analog blocks undergo similar processes of physical layout and verifications, before processing for full chip assembly and physical verification, and then mixed signal functional verification. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day26/2.JPG)
+
+The diagram above shows how an analog signal is converted into a digital signal through the use of an ADC block, and also how that signal is converted into an analog signal through the use of a DAC block.
+ 
+In the previous VSDBabySOC deisgn that we have worked on, we were having three blocks in the deisgn, the blocks are as follows
+
+* RVMYTH processor -digital
+
+* PLL – analog
+
+* DAC – analog
+
+### Collaterals in design flow
+
+The most important files that are needed in creating designs include:
+
+* LEF file – library exchance format, holds physical properties regarding cells
+
+* LIBerty file – contain timing information of cells
+
+* gdsII and OASIS file -  contains the whole chip design in a format that enables layout design to be transferred from one place to another, to be viewed or used for verifications 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day26/3.JPG)
+
+All the collaterals used in the PnR tool to create the gdsII file. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day26/4.JPG)
+
+Summarized description of the physical design flow.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day26/5.JPG)
+
+Source of the files needed for the collaterals of physical design flow.
+
+### IP cores
+
+Ip cores consist of a block of logic or data used in a semiconductor chip. Intellectual property core, is used to make filed-programmable gate array (FPGA) or application specific integrated circuit for a product. They are created throughout the design process and can be turned into components for reuse. IP cores have 2 types , hard (has logic and physical implementation, the physical layout of a hard macro IP is fixed and finished) and soft (can be customized during physical design phase and mapped to any other process technology). 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day26/6.JPG)
+
+The diagram above shows how it works in the semiconductor industry, which is heavily affected by moore’s law, wherein the size of a transistor is predicted to reduce in size by half every 2 years. This comes with newer and more challenges to overcome.
 
 </details>
 
