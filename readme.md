@@ -52,6 +52,8 @@ Content of training:
 
 - [Day_26: Introduction to mixed-signal flow](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_26-introduction-to-mixed-signal-flow)
 
+- [Day_26: Introduction to crosstalk – glitch and delta delay](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_27-introduction-to-crosstalk--glitch-and-delta-delay) 
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
@@ -5734,6 +5736,8 @@ We can check on the crosstalk settings through the commands:
 ![](https://github.com/YishenKuma/sd_training/blob/main/day27/a17.JPG)
 
 > report_si_aggressor_exclusion
+	
+Design does not seem to be loaded correctly, pending debug.
 
 </details>
 
