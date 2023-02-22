@@ -5741,7 +5741,7 @@ Design does not seem to be loaded correctly, pending debug.
 
 </details>
 
-## **Day_28: Introduction to DRC/LVS **
+## **Day_28: Introduction to DRC/LVS**
 
 <details><summary> Lecture Day 28 </summary>
 
