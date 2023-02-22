@@ -5613,4 +5613,134 @@ The diagram above shows how it works in the semiconductor industry, which is hea
 
 </details>
 
+## **Day_27: Introduction to crosstalk – glitch and delta delay**
+
+<details><summary> Lecture Day 27 </summary>
+
+In the VLSI design, there may be times when the nets that are routed are getting impacted by the noise from other nets, the capability of a net to overcome the noise from other signals and carry uncorrupted values is known as signal integrity. A design has good signal integrity if if tuis able to carry information reliably and resist the effects of the high-frequency electromagnetic interference from nearby signals. 
+
+Crosstalk refers to a type of noise signal that corrupts the actual signal while transmnitting, usually between two or more adjacent nets due to capacitive cross coupling.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/1.JPG)
+
+> https://www.vlsi4freshers.com/2020/04/crosstalk-and-noise.html
+
+The victim net refers to a net that receives undesirable cross-coupling effects from nearby net/nets.
+
+The aggressor nets refer to the net that would cause those effects on the victim net. The aggressor net is also susceptible to becoming a victim net as well. 
+
+In order to ensure successful tapeout of the design, we need to perform the quality checks for the signal integrity and the crosstalk.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/2.JPG)
+
+> https://medium.com/@einfochips/crosstalk-analysis-and-its-impact-on-timing-in-7nm-technology-abcfb795190f 
+
+Crosstalk glitches refer to spikes on nets during its constant state, caused by the switching activity occurring on a nearby net, causing the coupling capacitance to occur between the 2 nets. 
+
+</details>
+
+<details><summary> Lab Day 27 </summary>
+
+In order to perform crosstalk delay analysis, we need to enable the primetime SI through the app_var “si_enable_analysis” to true.
+
+Second is to back annotate the design with cross-coupling capacitance information in a SPEF or GPD file. This is done through the command “read_parasistics -keep_capacitive_coupling file_name.spf”. For this, we need to generate the spef file from our icc2 shell with our design loaded. For up-to-date parasitics, it is recommended to do update_timing before write_parasitics.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a2.JPG)
+
+Once we have all the necessary input files for PT_shell, we need to load the design to begin the analysis.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a3.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a4.JPG)
+
+> set link_library                [list  /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/sky130RTLDesignAndSynthesisWorkshop/DC_WORKSHOP/lib/sky130_fd_sc_hd__tt_025C_1v80.db /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/sky130RTLDesignAndSynthesisWorkshop/DC_WORKSHOP/lib/mew/VSDBabySoC/src/lib/avsddac.db /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/sky130RTLDesignAndSynthesisWorkshop/DC_WORKSHOP/lib/mew/VSDBabySoC/src/lib/avsdpll.db]
+
+> read_verilog -design vsdbabysoc/init_dp -top vsdbabysoc /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/rvmyth/report/vsdbabysoc_gtlvl.v
+
+> link_design vsdbabysoc 
+
+> read_sdc /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/rvmyth/report/vsdbabysoc.sdc
+
+> set_app_var si_enable_analysis true
+
+> read_parasitics -keep_capacitive_coupling /nfs/site/disks/png_mip_gen6p9ddr_0042/ymaniraj/rvmyth/vsdbabysoc_spef.temp1_25.spef
+
+We use the check_timing command, and commands for checking specific to crosstalk analysis: 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a6.JPG)
+
+> check_timing is unsuccessful, warning shows that are 5 ports with parasitics but having no driving cells. Warning also prompt showing check unable to compute the rising/falling RC network delay from 1 pin to another.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a9.JPG)
+
+PT_shell gui shows no endpoints for the analysis types for the vsdbabysoc design.
+
+Then we will have the timing reports, and the bottleneck reports to analyze. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a8.JPG)
+
+> report_timing -crosstalk_delta, path timing from cells are not shown in the path, as compared to timing report done in icc2_shell.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a11.JPG)
+
+> report_si_bottleneck
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a10.JPG)
+
+> report_bottleneck
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a12.JPG)
+
+> report_si_double_switching
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a13.JPG)
+
+> report_noise
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a14.JPG)
+
+> report_timing -transition_time -crosstalk_delta \ -input_pins -significant_digits 4
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a13.JPG)
+
+Some of the repair strategies that can be used for the nets reported out in the bottleneck reports include using the commands: 
+
+> size_cell
+
+> set_coupling_separation
+
+> minimum_active_aggressor
+
+The corsstalk net delay can be done using the command:
+
+> report_delay_calculation -crosstalk \ -from [get_pins g1/Z] -to [get_pins g2/A]
+
+We can check on the crosstalk settings through the commands:
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a15.JPG)
+
+> report_si_delay_analysis
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a16.JPG)
+
+> report_si_noise_analysis
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day27/a17.JPG)
+
+> report_si_aggressor_exclusion
+
+</details>
+
+
+
+
+
+
+
 
