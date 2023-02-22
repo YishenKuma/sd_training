@@ -5741,6 +5741,23 @@ Design does not seem to be loaded correctly, pending debug.
 
 </details>
 
+## **Day_28: Introduction to DRC/LVS **
+
+<details><summary> Lecture Day 28 </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/1.JPG)
+
+Physical verification checks the correctness of the generated layout design, through the four steps, which are DRC, LVS, ARC, and ERC.
+
+> DRC: design rule check, determines if the layout satisfies a set of rules required for manufacturing.
+
+> LVS: Layout versus Schematic, verifying that the layout created is functionally the same as the schematic/netlist of the design.
+
+> ARC: antenna rule check, checks for possible issues in layour design that may lead to plasma induced fate oxide damage during manufacturing, also known as antenna effect
+
+> ERC: electrical rule check, checks design for all electrical connections that are considered dangerous.
+
+</details>
 
 
 
