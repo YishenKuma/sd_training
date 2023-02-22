@@ -54,6 +54,8 @@ Content of training:
 
 - [Day_27: Introduction to crosstalk – glitch and delta delay](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_27-introduction-to-crosstalk--glitch-and-delta-delay) 
 
+- [Day_28: Introduction to DRC/LVS ](https://github.com/YishenKuma/sd_training/blob/main/readme.md#day_28-introduction-to-drclvs) 
+
 ## **Day_0 : System/Tool Setup Check. GitHub ID creation**
 
 <details><summary> Lecture Topics  </summary>
