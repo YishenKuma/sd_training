@@ -5745,7 +5745,7 @@ Design does not seem to be loaded correctly, pending debug.
 
 <details><summary> Lecture Day 28 </summary>
 
-![](https://github.com/YishenKuma/sd_training/blob/main/day28/1.JPG)
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/1.jpg)
 
 Physical verification checks the correctness of the generated layout design, through the four steps, which are DRC, LVS, ARC, and ERC.
 
