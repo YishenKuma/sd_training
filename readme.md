@@ -5761,6 +5761,1582 @@ Physical verification checks the correctness of the generated layout design, thr
 
 </details>
 
+<details><summary> VSDIAT Day 28 </summary>
+
+<details><summary> Day 1: Introduction to skywater sky 130 </summary>
+
+<details><summary> Introduction to SkyWater PDKs and opensource EDA tools </summary>
+
+<details><summary> Introduction to Skywater PDK </summary>
+
+PDK stands for Process design kit, it is a bundle of files and documentation needed by the designer to know how to work with the process foundry an use it to make chips. 
+
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/4.JPG)
+
+130 in the sky130 refers to the feature size, referring to the length of the smallest transistor that can be made in the process. 
+
+Skywater refers to the manufacturer.
+
+Skywater pdk is mainly comprised of the documentation and the PDK library and files, as well as community.
+
+Documentation: https://skywater-pdk.readthedocs.io/en/main/ 
+
+PDK library and files: https://github.com/google/skywater-pdk 
+
+Community: https://invite.skywater.tools/ 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/2.JPG)
+
+> Information on the sky130 pdk can be obtained here: https://github.com/google/skywater-pdk 
+
+The SkyWater Open Source PDK is a collaboration between Google and SkyWater Technology Foundry to provide a fully open source Process Design Kit and related resources, which can be used to create manufacturable designs at SkyWater’s facility.
+
+The SKY130 is a mature 180nm-130nm hybrid technology originally developed internally by Cypress Semiconductor before being spun out into SkyWater Technology and made accessible to general industry.
+
+The SkyWater Open Source PDK documentation can be found at https://skywater-pdk.rtfd.io. 
+
+The skywater pdk works with efabless.com to get their custom boards for free provided that the users design must be made available in 	a public repository.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/3.JPG)
+
+> https://efabless.com/
+
+</details>
+
+<details><summary> OpenSource EDA tools </summary>
+
+The tools working with the skywater pdk include: 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/5.JPG)
+
+* Open_pdks: works with any process in theory, with any other open process descriptions, so it is now mainly an installer for the skywater 130 process.
+
+> http://opencircuitdesign.com/open_pdks/
+
+> https://github.com/RTimothyEdwards/open_pdks 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/6.JPG)
+
+> open pdks work through the following steps above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/7.JPG)
+
+The magic tool is the backbone of the openPDKs installer and is mandatory to have installed before running the make file. Magic performs extraction and DRC, and can create design layout form parameterized descriptions either within the layout tool or within the schematic. Magic is responsible for creating any file format for any cells that is missing from the repository sources.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/8.JPG)
+
+Klayout is an alternative layout  editor and viewer and can also do DRC.  Openpdks will install a skywater sky130 compatible setup  file and script to do the DRC checks. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/9.JPG)
+
+Openlane is the synthesis and route package based on the open road tools, it's basically a wrapper around the open road tools with various setups and scripts that support the skywater process.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/10.JPG)
+
+Xscheme is a schematic editing tool. It is not directly implemented in openpdks,  but it's a third party repository that openpdks can pull in and copy it to its common installation location.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/11.JPG)
+
+Netgen is the LVS tool that typically works with a netlist extracted from a layout using magic, and the netlist generated from Xscheme or from openlane. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/12.JPG)
+
+Ngspice is the analog simulation tool based on Berkeley spice and openPDK is installed all the model files such that Ngspice can find them with the right include statements.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/13.JPG)
+
+There are a few other alternative tools including qflow, an alternative digital synthesis flow, IRSIM, a switch level simulator and power analyzer and Xcircuit, an alternative schematic entry and schematic capture tool. Additional tools can be added to open PDK either as built-in entries like magic and open lane or a third party entries like Xscheme. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/15.JPG)
+
+In addition to the tool setups for open source EDA tools, openpdks will install the foundry and third party libraries, creating a directory structure common across all libraries regardless of the source, that's the main goal of openpdks, to have a common file system structure and method so that all EDA tools can automatically know where to find all the libraries files and information that they need. This is especially important for open source tools because they are spread around maintained by different groups and not fully integrated. There are upsides to this, but the downside is that methods can get very fractured and incompatible if there isn't a common framework that everyone agrees to work with.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/14.JPG)
+
+> SkyWater SKY130 Installed Filesystem Structure
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/16.JPG)
+
+> Open PDKs Project Filesystem Structure
+
+</details>
+
+<details><summary> Understanding Skywater PDK layers </summary>
+
+The skywater sky130 process is described as a hybrid 130 nanometer 180 nanometer standard CMOS fabrication process. Mostly fet transistors have a minimum length of 150 nanometers, though specifically designed memory layouts use 130 nanometer long devices.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/17.JPG)
+
+There are five layers of aluminum metal plus a layer of titanium nitride which is used like a metal layer but is relatively high resistance, so it is not good for long routes. This layer which is called local interconnect, Li, is the most nonintuitive layer in the whole process for anyone used to process this where the first layer of metal above polysilicon is an aluminum routing layer. The general rule for using local interconnect is to use it to connect neighboring devices but otherwise contact up immediately to the metal one. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/18.JPG)
+
+In the skywater standard cell layouts, the local interconnect is used for the power and ground rails , but it should never be used for routing the entire length of both rails of local interconnects strapped with metal one above them. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/19.JPG)
+
+Contacts to polysilicon require a nitride Poly cut layer around the contacts, usually this isn't an issue but it is possible to place contacts in ways that seem legitimate but cannot satisfy the design rules for the nitride polycot layer.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/20.JPG)
+
+The metal layers are in a progressive thicknesses with local interconnect being the thinnest followed by metals 1 and 2 and then a thicker metal 3 and 4 and finally a thick metal 5, which is a bare minimum of metal layers for this feature size. When running digital flows the tool should reserve metal 5 for routing and with local interconnect unusable for routing there are only metals 1 through 4 to route with. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/21.JPG)
+
+Metal layers and vias are called the back end layers and everything below that is called the front end there are often distinctly separate with different precision required for the masks and of course different fabrication steps. They share the steps of oxide growth, but the front end is mainly diffusion and ion implantation while the back end is mainly metal deposition. 
+
+On the front end, the main difference in use of layers for the skywater process vs other processes is that they have divided the diffusion layers into diff and tap layers, where diff represents the heavily doped regions used transistor source and drain while tap represents the oppositely doped region used for well and substrate contacts. Most silicon fabrication processes do not distinguish between these two since they're both fabricated with a diffusion method in the same step and they're only differentiated through different doping levels, there are implant masks for these different doping levels so the information needed to distinguish a source or drain region from a tap region is already available. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/22.JPG)
+
+Other useful front end layers to know about are the deep N well, which is an N well buried so deeply that there's room to diffuse P well region into the area above it. The deep N well layer then creates a barrier N-doped region sandwiched between the P substrate and the P well. The isolated region allows P type devices such as fet transistors, bipolars and diodes to be completely isolated from the substrate, this isolation comes at the expense of the area required for surrounding the whole deep N well region with an N well ring to completely isolate the P well region on all sides, and the large required spacing between the separate deep N wells of multiple isolated domains are needed. However, the improvement in noise isolation is worth those drawbacks 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/23.JPG)
+
+The HVI layer is a high voltage implant which has more than one use. Firstly, N well implanted with HIV is tolerant to higher voltage levels, the mask is also used to grow additional insulation under the gates of mosfet transistors forming what is known as a thick oxide gate transistor. The thick oxide devices are tolerant of voltages up to around 5 volts and the skywater process while the nominal thin oxide devices are only tolerant voltages up to about 2 volts. This leads to typical dual voltage domain designs which analog circuits are designed with thick oxide devices and run at a common voltage of 3.3 or 5 volts, and core digital circuits are made in the thin oxide devices and run into voltage of 1.8 volts. The pad frame cells and the skywater IO library reflect this dual domain design methodology with a typical core voltage of 1.8 volts and a pad voltage of 3.3 volts. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/24.JPG)
+
+The MIM cap layers are part of the back end process, although they form devices that are extracted and simulated from a design standpoint, they feel more like part of the front end. MIM stands for metal insulator metal and these capacitors are formed by adding metal plates between two metal routing layers. The skywater process is notable for having the dual MIM process, in which capacitors can be fabricated between metal layers 3 and 4, but also between metal layers 4 and 5, making a stacked capacitor with double the capacity of one layer only. The capacitors are particularly useful because by being fabricated up in the back end layers the area underneath them remains available for placing transistors and other front end components.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/25.JPG)
+
+There is one other metal layer made available in the skywater process, which is called the redistribution layer and it is not fabricated by skywater, but is fabricated by a third party manufacturer specializing in the process. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/26.JPG)
+
+Redistribution layers are typically used to form bump bonds, a part of WLCSP packaging which stands for wafer level chip scale packaging. The redistribution metal layer which is copper is deposited on top of the finished chip and solder bumps are added on top of the redistribution metal. The end result is that the die itself becomes its own packaging, no wire bonding is needed, the chip is just flipped upside down and soldered directly to a circuit board with the reflow process. The redistribution layer is usually not a design layer and is considered more as part of the chip packaging. However, the copper layers are thick compared to the underlying process back end more than four 4  thick, and can be useful for forming conductors on the top of the chip. In any case, analog miners have to be aware of any redistribution layers on top of the design and in addition that the chip is flipped with circuit board power and ground planes directly underneath
+
+</details>
+
+<details><summary> Understanding Skywater PDK devices </summary>
+
+Understanding the devices is important for physical verification since much of the physical verification is concerned with correctly identifying and extracting all devices on a chip. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/27.JPG)
+
+Like most larger feature size processes that are good for analog and mixed signal design, the skywater process has numerous device offerings for resistors, bipolar devices, capacitors, etc. The best bipolar devices are vertical bipolars, making use of the NP junctions between diffusion regions and wells. Processes like these skywater 130 nanometer process that have deep N well layers can have properly isolated in NPN transistors with the N layers being an N diffusion layer for the emitter, a P well for the base and the deep N well as the collector. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/28.JPG)
+
+PNP bipolars are limited in use is the only configuration requires that the collector be grounded as it is tied directly to the substrate. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/29.JPG)
+
+The best resistors are made with doped polysilicon. There are two specialty devices in the skywater process, one of these is a P+ doped Poly resistor with sheet resistance of around 1 kilogram per square and there is a P- doped Poly resistor with a sheet resistance of around 2 kilograms per square.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/30.JPG)
+
+For some applications, diffusion resistors are appropriate, but since they have a PN junction underneath they must be used in circuit design specifically to keep the junction firmly reverse biased. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/31.JPG)
+The highest resistance per square is the P well resistor, but due to the large size and spacing requirements for the P well layer, it is rarely a practical choice especially when high sheet resistance Poly resistors are available in the process. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/32.JPG)
+
+One oddity of the skyward process is that most devices have a discrete set of sizes that have valid corresponding models, meaning devices aren't characterized across a continuous change in width and length. For a number of the devices using a device size that is not one of the valid characterized sizes is not even allowed, the precision resistors for one come in five discrete widths that correspond to a layout around an integer number of contacts. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/33.JPG)
+
+Devices with a restricted number of approved layouts are not all that uncommon in process PDKs, typically a number of devices are carefully laid out and thoroughly tested and that layout becomes the single reference design. Those devices are passed on to the user by the foundry GDS files and the user is expected to use those layouts as is without touching them. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/34.JPG)
+
+There are a number of mask layers that are specific to a handful of devices with fixed layouts, because of that most players really don't need to be shown to the designer. Most such layers are identifier layers, such as the capacitor or resistor or bipolar identifiers which need to cover the device but have no design rules associated with them other than they need to cover the extent of the device. The designer would not even need to know that an identifier layer is there.
+
+</details>
+
+<details><summary> Understanding Skywater PDK libraries </summary>
+
+The skywater openPDK is distributed along with a number of complete IP libraries from the foundry. The library should contain everything that the user needs to work with that IP. There are three types of libraries immediately available in the skyward PDK: digital standards libraries, IO cells, and primitive devices. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/35.JPG)
+
+The digital standard cell libraries all come with layout of every cell and GDS form and files that are normally used by digital synthesis flows such as liberty, timing files, lef technology files and abstract cell views, verilog descriptions of the cells, and spice CDL netlist. There are various flavors of digital cells seven of them and all covering a range of uses from low power to high speed, high density, high voltage, and low leakage. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/36.JPG)
+
+The libraries all follow a standard naming convention, and all cell names and device names contain the library name as a prefix. The library names are in the form of the sky 130_vendor_library-type, and then optionally an abbreviation for the library, if there is more than one library per type. So the most commonly used the digital library, the high density standard cell set is named sky 130_FD_SC_HD. The library name prefixes all of the standard cells, so the standard cell name may be for example sky130_FD_SC_HD__nor2_2, “__” used as the separator between the library name and the cell type. Typically it's the synthesis tools that worry about what drive strength to use not the user.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/37.JPG)
+
+For the design using digital standard cells in a schematic, be aware that the standard cells are designed specifically to be placed in a row, so any manual layout containing standard cells should treat them the same way placing them next to each other according to the bounding box, and not overlapping or spaced apart.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/38.JPG)
+
+Another important library is the IO cell library. The skywater 130 nanometer process has a particularly complicated set of io cells that are legacy of a series of chips designed by cyber semiconductor. They have a number of unusual features and many of those features are not going to be of interest to most designers. The efabless harnessed chip design exists as a good reference on how to put together a pad frame with these cells. The name of the IO library is sky 130_FD_IO.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/39.JPG)
+
+One problem with the IO library from skywater is that it contains power and ground pads which have entire disconnected blocks in them. One example of what is expected is that the Vdd IO pad cell would be connected to the Vdd IO ring going around the pad frame, but there is an overlay cell that is needed to connect the Vdd IO pad to the Vdd IO bus. There is also an ESD voltage clamp in the same cell but it's not connected to any power domain, so if you want the Vdd IO Pad to connect to the Vdd IO ring and also have VDD IO power clamp for ESD protection, there's supposed to be another overlay cell for that, only those overlays don't exist. Fortunately the openPDK installer takes care of those problems by supplementing the IO library with a set of cells that include the missing overlays and other cells which conveniently combine the base cells and the overlays together. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/40.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/41.JPG)
+
+The primitive device library which is named sky 130_FD_PR contains devices that have very specific layouts that are approved by the vendor, which in this case is the foundry. Those layouts include regular transistors with layouts that are optimized by best practice design for RF or radio frequency use, that generally means carefully controlling the parasitics to avoid signal attenuation or noise through parasitic channels.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/42.JPG)
+
+Other specific device layouts in the primitive library can include bipolar transistors, high voltage drain extended devices, ESD devices and large array of parallel plate capacitors of all shape sizes and metal layers. It is not advised to use the parallel plate capacitor simply because there are MIM caps available which have much higher capacitance per unit area without picking up all the routing area above a design. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/43.JPG)
+
+There are two libraries that have not been distributed with skywater PDK which are the SRAM and NVRAM libraries. The SRAM library has been handed over to the open RAM project. The original sources from the foundry included only the core SRAM cell layout and so the open ramp project is creating the additional cells needed for the decoding and driver circuitry, eventually these cells will be put together in a library and either added to the skyward PK or just left as a third party library. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/44.JPG)
+
+There is less of an offering from skywater for the NVRAM which is to say nonvolatile ram such as flash eprom. What is there is not much more than just the design rules for the floating gate Sonos transistor. An NVRAM library would need not only the same basic decoding and driving circuits as an SRAM library, but it needs additional circuitry for the high voltage charge bumps and circuits to control the programming and erasing.
+
+</details>
+
+<details><summary> Opensource tools and flows </summary>
+
+The file formats that are posted are specifically chosen for the ability to be open sourced which are non-proprietary formats and so they should be able to be used with open source tools. EDA tools whether commercial or open source or not really known for their variety of offerings but there are a handful to choose from.
+
+First to design the circuit and make sure it works, we need to know what tools can be used to do the design and do a functional verification and do a physical. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/45.JPG)
+
+We will use a tool called Xschem to create the schematic. Xschem is well integrated with both ngspice and gaw to design and functionally verify a working analog circuit.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/46.JPG)
+
+The schematic is something that can be used to generate a netlist, and the netlist can be simulated with Ngspice. The same netlist and spice format has all the information needed to know what the devices should look like in the layout. For the layout we'll use the tool magic.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/47.JPG)
+
+The PDK is written so that the device drawing procedures can be kept in a file and sourced at the time the program starts. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/48.JPG)
+
+Each device requires a set of routines to describe. It each device is heavily parameterized so that the way the device is drawn depends on the way the parameters are given to it.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/49.JPG)
+
+Some of these parameters are the same parameters that you have control of in the schematic drawing program. Some parameters are very layout specific and don't appear in the schematic such as where to put contacts or whether to add a guard ring and whether to contact ends up to a routing layer.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/50.JPG)
+
+The starting point and creating layout is straightforward, export a schematic to a netlist, then you import that netlist into the layout.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/52.JPG)
+
+The next step in the manual flow will be to move the devices around in the layout until they pass DRC checks and then wire them together. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/53.JPG)
+
+The final step will be to run LVS again. LVS takes a number of forms but in this case, the traditional one is performed, which is comparing a layout to schematic. They need to be compared as spice netlist formats. 
+
+From the schematic side, a netlist will already be generated for simulation, we use that same netlist imported into the layout tool to see the layout. We use a method called extraction which built into the layout tool. We'll issue a set of commands to the layout tool and from that, we get a second netlist that describes the circuit as the layout tool sees it.
+
+The layout tool has to look at the actual mask layers and the layout and decide for itself how those layers interact to form devices with no prompting and ideally no additional information above and beyond the actual mask layers in the layout. 
+
+Now we have 2 netlists, one is the schematic that is drawn to symbols and the other is a layout drawn with mask layer geometry. Run the LVS tool which compares these two netlists and tells us whether or not they are equal to each other. If they are not equal, then the design needs to be debugged until the design is matching.  
+
+</details>
+
+</details>
+
+<details><summary> Tool installations and basic DRC/LVS design flow </summary>
+
+<details><summary> Check tool installations </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x1.JPG)
+
+Running magic with Gui and console
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x5.JPG)
+
+Running magic without console
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x7.JPG)
+
+Running magic without console or gui
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x2.JPG)
+
+Running Netgen
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x9.JPG)
+
+Running Netgen with Gui, not recommended as has high memory consumption
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x6.JPG)
+
+Running netgen without console
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x3.JPG)
+
+Running Xschem
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x4.JPG)
+
+Running ngspice
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x8.JPG)
+
+Running test script on magic, netgen and xschem tools
+
+</details>
+
+<details><summary> Creating Sky130 device layout in magic </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x10.JPG)
+
+Setup required before creating sky130 device, copying the links makes it easier to run instead of remembering the command lines.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x11.JPG)
+
+Running xschem
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x12.JPG)
+
+Type E to open a design, and CTRL e to close a design
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x13.JPG)
+
+Loading magic with sky130 technology loaded
+
+> using the command “magic -d XR”, allows us to load magic but with more rendering of the graphics
+
+> with the command “magic -d OGL”, allows to load and use a faster version of magic tool
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x14.JPG)
+
+Paint on layers on the design by selecting desired area and hovering over the substrate, then hit the middle key on the mouse to apply the layer. Use the e command to erase layer. Hover over the tool bar to see the layer names.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x15.JPG)
+
+Create a device by drop down devices 1
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x16.JPG)
+
+The device can be modified by change the settings on the param window and hitting apply. Get description of selected “s” material by typing “what” on console
+
+</details>
+
+<details><summary> Creating simple schematic in Xschem </summary>
+
+Load xschem and click new schematic under file
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x17.JPG)
+
+Click the insert key on keyboard to choose a symbol in the device.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x18.JPG)
+
+Selecting an nfet from the sky130_fd_pr library
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x20.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x19.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x21.JPG)
+
+Insert the ipin, opin, and io pins for the device, then wire up the whole device.
+
+> m: move
+
+> del key: delete
+
+> c: copy
+
+> q: properties
+
+Change the name and properties of the pins and fets as well.
+
+It is best not to use any specific power supply pins, since there is no concept of a global supply pin or net in a layout. Tere could be issues in verifying the layout if not adhered to.
+
+Change in number of fingers in the fet device also means we need to change the width to be changed, as the original width is only for one finger.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x22.JPG)
+
+Save the design as inverter.sch
+
+</details>
+
+<details><summary> Creating symbol and exploring schematic in Xschem </summary>
+
+We want to have a testbench that is separate from the schematic itself, this is a best practice to functionally validate the circuit. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x24.JPG)
+
+Create the symbol by drop down bar Symbol, and select create symbol from schematic. Then start a a testbench schematic by clicking file and, clicking new schematic. Insert the created symbol in the local directory.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x25.JPG)
+
+Get the default power supplies from the xschem library. Connect two voltage sources, one to the input, and one to the power rail. Make the connections to the ground node. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x26.JPG)
+
+To create the proper spice testbench, we need to generate a ramp input to be able to view the output response. We do this by changing the voltages for the voltage sources to the values shown above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x27.JPG)
+
+We need to include two box statements for ngspice, it is not specific to any components but need to be included in 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x28.JPG)
+
+Click on netlist to generate the netlist, then on simulate to get the simulation waveform for the inverter layout. Now we can see that the functionality of the inverter has been verified. We can then proceed to create a layout for it. We need to edit the device again, we can click e to do this. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x29.JPG)
+
+Under simulation, click the LVS betlist option, then create the netlist by clicking the netlist button.
+
+</details>
+
+<details><summary> Importing schematic to layout and inverter layout steps </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x30.JPG)
+
+Open the spice netlist for the inverter through import spice. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x31.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x32.JPG)
+
+The device is not laid out as we need to do this ourselves. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x33.JPG)
+
+The parameter table can be show for a device by selecting and typing ctrl p.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x34.JPG)
+
+Arrange the pins accordingly for the inverter layout.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x35.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x36.JPG)
+
+Modify the fets parameters, to put a local interconnect, and split the local interconnects to the top and bottom fets. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x37.JPG)
+
+Wiring up the design.
+
+</details>
+
+<details><summary> Final DRC/LVS checks and post layout simulations </summary>
+
+Save the layout.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x38.JPG)
+
+Perform extraction using the above commands. First command ensures extractions go to local directory, second command performs the extraction. Setup the netlist generator for hierarchical output ngspice format,  and then create the spice netlist.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x39.JPG)
+
+Clean up the additional files created in the directory using the command shown above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x40.JPG)
+
+Running netgen “netgen -batch lvs” shows that the netlist circuits match uniquely. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x41.JPG)
+
+In order to perform extraction with parasitics, we need to use the commands above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x42.JPG)
+
+The output spice netlist shows all the parasitics extracted for the design. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/x44.JPG)
+
+If we run ngspice with the layout extracted netlist, we can see that the 2 netlist are verified to be functionally equivalent. 
+
+</details>
+
+</details>
+
+</details>
+
+<details><summary> Day 2: DRC/LVS Theory and labs </summary>
+
+<details><summary> Introduction to DRC and LVS </summary>
+
+</details>
+
+<details><summary> Understanding GDS Format </summary>
+
+Design analysis and simulation are the underpinnings of all chip design. Physical verification however is the protective barrier between the designer and design failure. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b1.JPG)
+
+Design rule checking make sure that the entire design layout meets all silicon foundry rules for mass making. 
+
+Layout versus schematic make sure that the design layout electrically matches the design as implemented in schematic form or any form which is an electrical description of the circuit that is independent of the layout. For LVS only two sources are used an compared to.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b2.JPG)
+
+In modern practice, the tendency toward automation means that chips are designed from a single source usually a register transfer language RTL like verilog or VHDL. The process of LVS is the matter of checking the entire design flow through different routes, one starting at the RTL source and working forwards and the other starting at the finished layout and working backwards.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b3.JPG)
+
+Wherever a tool exists that can do physical verification it should be applied, as it adds robustness to the process.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b4.JPG)
+
+CIF was a popular layout file format, it had 2nice properties, which was that it was in human readable asking format and that it was naturally extensible. 
+
+One downside of the CIF format was that any rectangle with an odd integer width can have its center point on an off grid position. The center point is not a physical point so it doesn't have to lie on a grid point, but the corners do have to lie up on grid points. To accommodate that all output concept is scaled up by two times inside each cell to account for the off grid rectangle centers.  
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b5.JPG)
+
+CALMA later introduced the GDS stream format , which is now the preferred format for the mask making. Magci software uses the GDS format now as well.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b6.JPG)
+
+We can see this in the use of cif see command in magic.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b7.JPG)
+
+The layer purpose pairs is what really distinguishes gds format. Every layer in the layout is described not by name but by two numbers, one to denote a layer like diffusion Poly or metal one and another to denote a purpose like drawing label
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b8.JPG)
+
+So GDSII is called a stream format, meaning you can output it all in one go from end to end. The output is in small self-contained packets or something but it's no more or less streaming than any other format. 
+The biggest disadvantage of GDS format is that it isn't binary with lots of null bytes and commands and the unprintable end of the ASCII set so you can't see anything in a file without either reading it into a layout editor or using a program to convert it into ASCII.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b9.JPG)
+
+Every file format to describe chip data needs to encode the same basic things, data are in the form of rectangles are polygons, and have a layer associated with them. The formats keep strong sense of hierarchy and you can collect geometry together and call it a cell and you can make instances of that cell and put them in other cells possibly rotated or flipped.We want to preserve some layout metadata which includes stuff that isn't part of a physical mask like labels, cell names, and instance names. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b10.JPG)
+
+There are a few additional tools in the openpdks repository under the common directory. These scripts are for replacing cell names and place within a file, or changing time stamps.
+
+Oasis is a new format which is supposed to produce much smaller output files than GDS. It does that but at the expense of taking out the last bit of readability and GDS files and making the whole thing completely comprehensible. Fortunately it can just be treated as a filter convert your files into Oasis to save space and convert it back when you need to.
+
+<details><summary> Extraction Commands, styles, and options in magic </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b11.JPG)
+
+Chip layout file formats don't contain much metadata and that includes any concept of a netlist that corresponds to the layout. We need for the layout tool to be able to independently generate the circuit netlist equivalent by looking at nothing other than the mask geometry of the layout. This is a process known as extraction.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b12.JPG)
+
+In the magic layout editor extraction is a straightforward process. It is a two step process in which magic generates an intermediate format of its own devising called the .ext. The second part is to gather the .ext format data and produce a netlist in a known format like spice.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b13.JPG)
+
+There is one .ext file inumerates all the devices like transistors capacitors and resistors used in the layout and all instances of cells that are used within that cell, all of the common connections from the cell down to the sub cells and all parasitic capacitances between nets and from nets to other nets.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b14.JPG)
+
+This is enough to build a complete netlist, and with a spice netlist you can run a spice simulator, or you can pass the netlist along with a schematic capture netlist to compare the two.
+
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b15.JPG)
+
+The main commands to extract in that list from a circuit are shown above.
+
+extract do local ensure all all the dot EXE files are written locally instead of in the same place as the dot mag layout file from which they were derived.
+
+extract all does the main work of extracting each cell into a dot EXT well and for a large circuit like a full chip it can take a long time
+
+ext2spice LVS is an option set up, there are a lot of possible options, but with this option produces the kind of output that you want to have for running LVS. If you choose the LVS option then the output is automatically in a format that is syntactically correct for ngspice.
+
+ext2spice does the work of converting the TXT files into a single .spice netlist
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b16.JPG)
+
+To simulate a netlist you need a testbench netlist. You'll need to supply your circuit with all the necessary stimuli as well such as power supply and input voltages. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b17.JPG)
+
+you'll need include statemenst at the top of the file to point to model files because the layout editor doesn't know anything about device models. All files that contain device models and parameters for the devices and the circuit need to be included. Since the test bench is a wrapper around the actual circuit netlist, you'll need an include line that includes the netlist that the layout editor generated.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b18.JPG)
+
+Finally you'll need some kind of analysis control block telling the circuit what analysis to run. Then we can run ngspice to perform functional verification.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b19.JPG)
+the technology file generated in the magic directory is divided up into a number of sections each corresponding to 1 aspect of the layout tool such as the DRC engine the GPS generator the GS reader the extractor and others. 
+
+Each section can come in any number of varieties called styles, each style begins with the keyword style and the name for the style and it ends with the start of another style or with the end of the section. The styles exist to do different things and each one has a purpose. To select a style, you wriute extract style “style”. The difference in the style variance that's the way that magic generates the output.
+
+</details>
+
+<details><summary> Advanced extraction options in magic </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b20.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b21.JPG)
+
+Additional extraction options 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b22.JPG)
+
+Ext2spice LVS runs with the above options
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b23.JPG)
+
+Extracting with capacitance
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b24.JPG)
+
+Extracting full RC
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b25.JPG)
+
+All commands for rc extraction
+
+For command references in magic, we can learn more on them here: http://opencircuitdesign.com/magic/ 
+
+</details>
+
+<details><summary> GDS reading option in Magic </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b26.JPG)
+
+Commands for reading gds can be found here
+
+> gds read file 
+
+> gds readonly true|false
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b27.JPG)
+
+Some cases the vendor files have layers that cannot be represented correctly, if the cells come from vendor we cannot make changes to them. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b28.JPG)
+
+Use of readonly option
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b29.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b30.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b31.JPG)
+
+Use of lef files in design and abstract view
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b32.JPG)
+
+Difficulty in reading gds if hiearachy is split
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b33.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b34.JPG)
+
+Flatten options to solve issue
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b35.JPG)
+
+No duplicates option to ignore cell memory
+
+</details>
+
+<details><summary> GDS writing, input, output styles and output issues </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b36.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b37.JPG)
+
+Writing options for gds
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b38.JPG)
+
+Merge option to turn everything into polygons
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b39.JPG)
+
+> best to use the vendor cif style when reading vendor files. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b40.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b41.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b42.JPG)
+
+Ensure using correct input or output styles before reading or writing.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b43.JPG)
+
+Gds output issues
+
+</details>
+
+<details><summary> DRC rules in magic </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b44.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b45.JPG)
+
+Magic drc interactive engine. There is higher lag with more intensive drc rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b46.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b47.JPG)
+
+Different ways to perform DRC checking, default is fast, more intensive is to use full
+
+Main DRC rule checking with style fast checks edge based rules and Boolean geometry rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b50.JPG)
+
+Use of cifmaxwidth for rule checking
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b48.JPG)
+
+Abstract views is a good way to perform drc checks on some cells
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b49.JPG)
+
+Errors in a cell can be resolved in the hierarchy above it
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b50.JPG)
+
+</details>
+
+<details><summary> Extraction rules and errors in magic </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b51.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b52.JPG)
+
+Extract section of magic tech file includes layer heights and thickness. Tech file will contain the parasitic capacitances.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b53.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b54.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b55.JPG)
+
+Extraction errors in magic
+
+</details>
+
+<details><summary> LVS setup for netgen </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b56.JPG)
+
+Netgen used for lvs
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b57.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b58.JPG)
+
+It becomes more complicated if subcircuits are used, when reading spice files. Technology setup file for lvs tells tool what the device names are, how the connections would be, if there is a need for combination, and which properties to compare between netlists. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b59.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b60.JPG)
+
+Lvs setup for netgen
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b61.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b62.JPG)
+
+How lvs handles hierarchy
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b63.JPG)
+
+Cascading mismatch issue
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b64.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b65.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b66.JPG)
+
+Lvs for layout against verilog
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b67.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b68.JPG)
+
+Black boxing in lvs, you cannot run lvs down to the transistor level, all logic gates will be black boxed
+
+</details>
+
+<details><summary> Verification by XOR </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b69.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b70.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/b71.JPG)
+
+We can perform verification through XOR file generation in magic, compares the layout to see the differences in layouts. Verify no unintended masks were changed.
+
+</details>
+
+</details>
+
+<details><summary> Labs for GDS read/write, extraction, DRC, LVS and XOR setup </summary>
+
+<details><summary> GDS Read </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y2.JPG)
+
+Read in the gds file based on the full path
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y3.JPG)
+
+we can find all the cells loaded through the cell manager, under the options tab
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y4.JPG)
+
+Here we have loaded the and2_1 cell into the gui.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y1.JPG)
+
+The commands above shows the ways we can check the istyles available and the istyle being used. The istyle currently being used is the sky130(vendor). The ports are treated as ports.
+ 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y6.JPG)
+
+If we change the istyle to sky130(), and read the gds file again, the layers in the layout view has been marked yellop, meaning thy are treated as regular text. It is better to be using the vendor style when dealing with vendor files.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y8.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y9.JPG)
+
+If we don’t want to overwrite the existing cells when reading gds, we set the gds noduplicates option to true, now when we change the style and reread the design, it will not update the cell.
+
+</details>
+
+<details><summary> Ports </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y10.JPG)
+
+If we select on a port, and type port index, we can tell the index for that port.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y11.JPG)
+
+This can only be done for 1 port selected at a time.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y12.JPG)
+
+The gds format is not great as it does not preserve most metadata. As we can see from tgeh port queries above, the values are set to default for the port definitions.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y13.JPG)
+
+If we look at the and2_1 subcircuit definition in the library folder, sky130_fd_sc_hd.spice, the cell definition is listed above. Even though the cell definition in the netlist shows A, the gds read in file shows first port as VPWR. The correct port order that should be considered is the definition form the vendor. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y14.JPG)
+
+In order to add this metadata into the gds file in magic is to read the corresponding lef file.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y15.JPG)
+
+Now, we see that the port class and use has been updated by the lef file. But the port order has not been updated. Magic has no spice read command to to provide the layout information. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y16.JPG)
+
+The way we can get the port order from the spice file is using the command shown above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y17.JPG)
+
+Now we can see the port name has also been updated as per the spice netlist.
+
+</details>
+
+<details><summary> Abstract views </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y18.JPG)
+
+IF we read in only the lef file without the gds file, we will see the abstract view of the cell.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y19.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y20.JPG)
+
+We can see the port order metadata is also not shown accordingly, however the use and class has been set appropriately.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y22.JPG)
+
+We will need to perform the same readspice command to update this. And reload the cell form the cell manager. Now the naming for port is fixed as well.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y23.JPG)
+
+If we try to create a new layout and instantiate the cell using getcell command, this will load an abstract view of the cell. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y24.JPG)
+
+ Writing this lef file with the above command will prompt the error message above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y25.JPG)
+
+Reading the written gds file, we will see the above layout. This si because magic should not be writing abstraction views to gds. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y27.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y28.JPG)
+
+If we use the command “save test” instead, and load that, we will get the appropriate cell view loaded from the magic file.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y29.JPG)
+
+Since we did save instead of write, the cell that was being edited was the cell that was saved, and not any subcells. The standard cell contents being edited was from the path above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y30.JPG)
+
+If we now try the gds write command, there would be no warning and we would have a valid gds file. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y31.JPG)
+
+We can make the cell writeable using the command above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y32.JPG)
+
+If we paint over a layer of Li over the cell, and write it to a gds, then the new gds file would remain unchanged, as the previous design was still a form of abstraction.
+
+</details>
+
+<details><summary> Basic extraction </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y33.JPG)
+
+To perform extraction of the loaded design, we use the command above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y34.JPG)
+
+We will have the generated spice file as shown above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y35.JPG)
+
+If we use the ext2pice lvs and cthresh 0 options, before running ext2spice, we will have the above spice netlist as shown above with the parasitic cpacitances shown with the lines starting with C.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y36.JPG)
+
+If we rerun again but with the value of 0.01 for the cthresh value, we will have less lines of parasitics written.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y37.JPG)
+
+In order to run a full RC extraction, we need to use the commands above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y38.JPG)
+
+We will see the number of nets that are found usable. The tolerance is a threshold for determining when a network needs to be replaced by a resistance network. Now we will have a .res.ext file that holds information that can be modified for R parasistics. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y39.JPG)
+
+Extract the netlist using the commands above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y40.JPG)
+
+We will now have a spice netlist containing both the R and C parasitic components.
+
+</details>
+
+<details><summary> Setup for DRC </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y41.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y42.JPG)
+
+By running the python file as shown above, we will run a full DRC check on the design and export the results into a txt file.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y43.JPG)
+
+There are different ways DRC checks can be run, the default style is drc(fast). 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y44.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y55.JPG)
+
+If we change the style to full, the drc violations in the design will be shown as seen above. Typing why will show the explanation for the violation.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y45.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y46.JPG)
+
+We can solve all these drc violations by simply adding a tap cell to the design, and aligning it to the right of the and cell. If we look into the and cell, we can see the errors present, but on the top level layout, these errors will not be seen. This is how the hierarchical drc check works for magic. 
+
+</details>
+
+<details><summary> Setup for LVS </summary>
+
+Create the netgen directory for running the lvs check for the design, and copy the necessary files to run netgen as done previously. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y47.JPG)
+
+Reopen magic. We had already created the .ext file, but we need to setup for lvs using the commands above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y48.JPG)
+
+Run the LVS check using the command above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y49.JPG)
+
+We can see that the lvs check is done and that the netlists are matching uniquely.
+
+</details>
+
+<details><summary> Setup for XOR </summary>
+
+We can also run XOR verification in order to see the changes made to a design.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y56.JPG)
+
+Load the same and cell in magic, but save the design as a secondary cell to be altered.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y51.JPG)
+
+Erase a small amount of the LI layer from the design, amd flatten the design.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y52.JPG)
+
+We run the XOR comparison firstly by generating an xor magic file.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/y53.JPG)
+
+Then we can see the difference between the altered design and the original design through the xor magic file.
+
+</details>
+
+</details>
+
+</details>
+
+<details><summary> Day 3: Front end and back end drc </summary>
+
+<details><summary> Introduction to DRC rules </summary>
+
+<details><summary> Introduction to basic silicon manufacturing process </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c2.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c3.JPG)
+
+Fabrication planar process through layer masking. Mask is needed in lithography step for creating patterns, usied in etch or implantation.
+
+The reason why moore’s law proves true is because each generation, the machines used to create masks improve. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c4.JPG)
+
+Limitations due to fabrication issues.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c6.JPG)
+
+Goal of design rule to avoid failure in fabrication
+
+Rules need to be passed before it can be accepted by a manufacturer
+
+Process yield in manufacturing is the percentage of working devices in a batch
+
+</details>
+
+<details><summary> Backend metal layer rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c8.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c9.JPG)
+
+Minimal width rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c11.JPG)
+
+Minimal width rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c12.JPG)
+
+Wide spacing rule
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c13.JPG)
+
+Notch rule
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c14.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c15.JPG)
+
+Max min area rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c16.JPG)
+
+Min hole rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c17.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c18.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c19.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c20.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c21.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c22.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c23.JPG)
+
+Via rules
+
+</details>
+
+<details><summary> Local interconnect rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c24.JPG)
+
+Comparison between layers that can be used as wires for connections.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c25.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c26.JPG)
+
+Local interconnect should be treated like polysilicon, not to be routed with. Only used to connect neighbouring circuits, not as long haul routing
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c27.JPG)
+
+For any device terminal, they should be connected up to metal layer 1 through local interconnect directly
+
+</details>
+
+<details><summary> front end rules, transistors implants, ID and boundary layers, wells, and same net rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c28.JPG)
+
+Front end rules affect all devices such as transistors and resistors
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c29.JPG)
+
+PDK includes automatic parameterized device generator in magic to draw complete device that satisfies all rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c30.JPG)
+
+Devices in magic, some devices cannot simply be drawn by hand
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c31.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c32.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c33.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c34.JPG)
+
+Rules related to layer masks
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c35.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c36.JPG)
+
+Types of devices defined by implant layers
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c37.JPG)
+
+Use of locked layers
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c38.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c39.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c40.JPG)
+
+Wells needs to connect with a tap to set the bias voltage
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c41.JPG)
+
+</details>
+
+<details><summary> Deep N-well and high voltage rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c42.JPG)
+
+Isolating an area using an nwell to provide noise isolation
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c43.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c44.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c45.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c46.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c47.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c48.JPG)
+
+Rules for deep n well 
+
+</details>
+
+<details><summary> Device rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c51.JPG)
+
+Resistors can be very complicated thus have many rules associated
+
+Capacitors include 4 types which are varctors, MOScaop, vertical parallel plate (VPP) and Metal insulator metal (MiM).
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c52.JPG)
+
+Rules for varactors
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c53.JPG)
+
+Rules for MOScap
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c54.JPG)
+
+Rules for VPP
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c55.JPG)
+
+There aren’t many reasons to use MIM
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c56.JPG)
+
+Rules associated for MiM
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c57.JPG)
+
+Diodes formed using ID layers, which don’t have drc rules, follow the rules for diffusion tap and well.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/c58.JPG)
+
+Fixed layout devices
+
+</details>
+
+<details><summary> Miscellaneous Rules latch up antenna stress rules </summary>
+
+Some miscellaneous DRC rules are not particularly layer specific, they are presented in the process documentation under the x category
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g2.JPG)
+
+Off grid rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g3.JPG)
+
+Angle limitations
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g4.JPG)
+
+Seal ring rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g6.JPG)
+
+Latchup rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g8.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g9.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g10.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g11.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g12.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g13.JPG)
+
+Antenna rules
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g14.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/g15.JPG)
+
+Stress rules
+
+</details>
+
+<details><summary> Density rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/o1.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/o2.JPG)
+
+Any deviation on flatness on layer will affect the upper layers above it. Physical polishing is needed to level out the layers. Chip has to have a certain amount of flatness. Metal wires are like bumps on the chip, the best way to minimize the bumpiness is to ensure surfaces uniformly covered by metal all over. This is what is meant by density rule. Ideal metal density falls around 60%. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/o3.JPG)
+
+There are automated tools to create fill patterns. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/o4.JPG)
+
+Analog designers hate patterns because they introduce extra capacitances all across circuit that is difficult to analyse. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/o5.JPG)
+
+There are occasions fill generations do not meet necessary density.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/o6.JPG)
+
+Placing metal in extremely high density can cause failure as well.
+
+</details>
+
+<details><summary> Recommendation rules, manufacturing rules and ERC rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/h1.JPG)
+
+It is good to follow the recommended rules to improve device robust.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/h2.JPG)
+
+Recommended rules define difference between test chip and production chip.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/h3.JPG)
+
+Rule violation in the final design require a waiver.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/h4.JPG)
+
+Electrical rule checks, ERC are checks for layouts that are DRC clean but may cause circuit failure due to electrical problems.
+
+</details>
+
+</details>
+
+<details><summary> Labs for all DRC rules </summary>
+
+<details><summary> Lab or width rule and spacing rule </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z1.JPG)
+
+Clone all the necessary file from the github link shown above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z2.JPG)
+
+We will begin with excersice 1 for width rule, spacing rule, wide spacing rule and notch rule.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z3.JPG)
+
+For the width rule, it is stated for metal 2 that the minimum width required for the design should be no less that 0.14um. If this is not adhered to, it can lead to spot defects, causing open circuits. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z4.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z6.JPG)
+
+We can fix this by either painting the metal 2 layer to the appropriate amount, or by stretching the existing layer.
+
+We can perform strecting by selecvting over an area, clicking a, and move the area using the numpad keys while holding shift.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z8.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z9.JPG)
+
+The spacing rule gives the minimum required spacing between 2 layers. If we do not fix this, it can cause material defect, leading to shorts. Solve this my moving the layers apart.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z10.JPG)
+
+We can do this also by selecting the region, typing the semicolon key, and typing the commands above.
+
+</details>
+
+<details><summary> Lab for wide spacing rule and notch rule </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z11.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z12.JPG)
+
+For the wide spacing rule, if a wire or piece of layout is wider that a specified distance, then the other wires must set apart from it by a specific amount of space. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z13.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z14.JPG)
+
+For the notch rule, we need to give the minimum space between two forks of the same layer.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z16.JPG)
+
+Now we can see that all drc violations have been resolved.
+
+</details>
+
+<details><summary> lab for via size, multiple vias, via overlap and autogenerate vias </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z17.JPG)
+
+Moving on to rules related to vias.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z18.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z19.JPG)
+
+The size of a via needs to be large enough by a certain amount. We can fix this by simply stretching the via. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z20.JPG)
+
+In order to see how vias are created in magic, we need to look at the second example. Placing the cursor around the contact and checking the cif format layer names. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z21.JPG)
+
+The contacts between layer 1 and local interconnect is known as MCON. IF we run cif see MCON, we can see the MCON for the second example showing multiple vias. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z22.JPG)
+
+Run command above to remove the MCON cuts.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z23.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z24.JPG)
+
+In the first example, if we had not resized the design, the MCON cut would not be bale to fit, and the via could not be placed there.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z25.JPG)
+
+Similarly if we stretch the design further, we can see multiple vias can now be added into the design.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z26.JPG)
+
+In this example, we have an overlap error being shown
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z27.JPG)
+
+We need to have a layer of metal 1 surrounding the box by 0.03um.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z28.JPG)
+
+We also need to have the metal overlap of 0.06 in one direction based on the rule, using the stretch tool we can fix this.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z29.JPG)
+
+If we want to auto generate via without the use of boc manipulation, we can use the keyboard shortcuts. Hitting the spacebar key will switch the cursor type, and then we can use the cursor used for drawing wires. BY holding down shift and left clicking, we can drop a via to the top layer. To drop a via to the lower layer, we need to hold shift and right click.
+
+</details>
+
+<details><summary> Lab for minimum area rule and minimum hole rule </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z30.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z31.JPG)
+
+For this, we are having a metal area that is not meeting the minimum area rule, to fix this simply stretch and increase the area. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z32.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z33.JPG)
+
+Here we have a minimum hole rule violation. Magic does not show this error unless we set the style to full. To fix this, we need to erase the sections until the hole size meets the requirements of 0.07um2. 
+
+</details>
+
+<details><summary> Lab for wells and deep N-well </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z34.JPG)
+
+In this example, we are having errors on our well layers because there is no taps inserted on the design. N-well will show the error as it is floating, but we will not see the error on the P-well as the process does not consider them, unless they are deep p-wells, which then will be treated as p-substrates.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z35.JPG)
+
+We need to paint on a layer of nsubstratediff, which does not fix the error yet. The n well cannot be floating, so we need to also have a layer of local interconnect. Add the layer of nsubstratecontact which will get rid of the drc violations. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z36.JPG)
+
+To fix the errors seen, we need to fix the drc violations by stretching the design adequately, and as mentioned, adding the local interconnect. Once this is done, there will no longer be any drc errors. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z37.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z38.JPG)
+
+We do the same for the pwell, adding in the psusbtratediff, then the psubstratecontact, and lastly adjusting the design to fix the remaining drc violation, as well as the layer of local interconnect.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z39.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z59.JPG)
+
+Here, the drc violation faced is shown above for the deep nwell.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z40.JPG)
+
+First we stretch the area out such that the area of the deep n well increases.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z41.JPG)
+
+We alse need to move the design away from the design in example 4b, as there seems to be a rule violation form the distance between.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z42.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z43.JPG)
+
+
+We need to then add an n-well overlap around the deep n well area. We can do this using the wire tool as well.
+
+Lastly, we simply need to add in the n-tap as was done before.
+
+</details>
+
+<details><summary> Lab for deprived layers </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z44.JPG)
+
+Here we have the derived layers, we can check to see what are the overlapping layer that is considered, this can be done using what command, which shows us that this is an nmoslvt layer. If we try recreating this as seen below, with the ndiff and poly layers, we see that this area is not considered nmoslvt but as simply nmos. This is because of the specifications in the tech file. If we want to get a layer of nmoslvt, we need to paint in the layer.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z47.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z60.JPG)
+
+In order to understand the implant layers, we will be using the above commands. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z49.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z61.JPG)
+
+We can also see the implant lvt layer on the nmoslvt using the commands above. The difference between the nmoslvt and the nmos we created.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z50.JPG)
+
+What shows us the layers in this example. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z51.JPG)
+
+This is a high voltage nmos, thus there should be a high voltage implant, HVI. We can verify this using the command above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z52.JPG)
+
+The HVI is slightly bigger than the NSDM implant layer. The high voltage implant does not cover the tap contact however, since the substrate will be grounded, thus it will not see the high voltage. There is however, a high voltage tap which can be painted over the existing tap. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z54.JPG)
+
+We can see the HVI implant which covers the tap if we look at the implant layer
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z53.JPG)
+
+If we add a layer of ndiff above as shown, we will get the following drc error. This si because ethe HVI layer must be kept a certain distance away from the regular low voltage layers.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z55.JPG)
+
+Poly contacts also need a special layer etch instead of implant, called nitride ploc cut, NPC. This layer etches through any nitride residues on the poly to ensure firmer contact between the LI and the poly.
+
+The NPC layer must also bridge between two contacts to avoid any spacing rule errors
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z56.JPG)
+
+There needs to be an additional geometry generated for the contacts of all NPC layers to satisfy all width and spacing rules. These additional geometry may overlap the diff layers, but will not violate the design rules.
+
+</details>
+
+<details><summary> Lab for parameterized and PDK devices </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z57.JPG)
+
+Here we have an nmos device, which is a magic generated device, but still shows drc errors. The error is a minimum area rule error. Magic could avoid the error by adding more metal to the layer, but does not as these contact will be routed to and have metal then.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/z58.JPG)
+
+If we simply paint over metal 1 over the contacts we will no longer see these errors.
+
+</details>
+
+</details>
+
+</details>
+
+</details>
 
 
 
