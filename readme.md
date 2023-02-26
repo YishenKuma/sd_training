@@ -7329,6 +7329,220 @@ Here we have an nmos device, which is a magic generated device, but still shows 
 ![](https://github.com/YishenKuma/sd_training/blob/main/day28/z58.JPG)
 
 If we simply paint over metal 1 over the contacts we will no longer see these errors.
+	
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e1.JPG)
+
+For the next example, we have an esdfet designed to be able to survive high voltages. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e2.JPG)
+
+The drc violations in the design is due to having transistor gates at an angel which should not be used
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e3.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e4.JPG)
+
+The way that can be done for magic to ignore rules that should be good is by av=bstracting it. All library views are somewhat abstract, they contain pointers to gds files, thus what is shown is nothing more than magic tools attempt to represent the gds data.
+
+We could change the layout without altering what is written to gds, which is usually only used for read only files that don’t get affected. We can use this to make the layout drc clean while not flagging false positives.
+
+We change the path of the cell to our local directory. Then confirm the pointer to gds file is still valid.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e5.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e6.JPG)
+
+Begin clearing off the drc errors by selecting and erasing the angled poly sections until all the drc errors have been reduced to zero.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e7.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e8.JPG)
+
+We do the same for 6c, which is to save to our local directory and perform the same changes to implement the fixes.
+
+</details>
+
+<details><summary> Lab For Angle Error And Overlap Rule</summary>
+
+Magic tool has a grid setup following the manufacturing grid that is provided. Magic can scal up the grid by a factor of 2, making the smallest possible box size 0.01um x 0.01um.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e9.JPG)
+
+If we try to scale down the magic internal grid with the command above, magic will prompt an error message saying that this is prohibited.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e10.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e11.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e12.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e13.JPG)
+
+If we try to create a triangle polygon and overlap it with a flipped copy, magic will try to legalize the overlap as seen above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e14.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e15.JPG)
+
+In exercise 7a, the triangle polygon was created into a subcell, then the copy was flipped and overlapped. This will avoid magic from compensating by legalizing the overlap, we will still get the drc error stating, position dows not align with manufacturing grid. We just need to fix this by selecting one of the shapes and moving them apart.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e16.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e17.JPG)
+
+Here we have the error that 90 degree angles are only permitted on local interconnect. To fix this we simply need to paint over the angled edge with more LI.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e18.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e19.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e20.JPG)
+
+Here we have another angle error but not on LI, if we click to see the box size we see that it is not a proper 45 degree due to the 201 x 200. To fix this, we repiant the angle, and fix the small drc violation by painting in more metal1 layer.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e21.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e22.JPG)
+
+For this overlap error, we do not se the nmos created similar to past. This is because the poly and diff layers are in different cells. Magic does not create the overlap because of this. To fix this we just repaint the layer of poly, which will create the nmos as seen.
+ 
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e23.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e24.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e25.JPG)
+
+Overlaps in contacts are having different rules. Contacts have to overlap exactly to adhere to auto generation rules. In this example, the overlap cur has been pushed over to align properly. 
+
+Diving into one of the layers, we can see the contact cuts aligned correctly, and in the top level, they are rearranged to error free, but have the overlap drc violating.
+
+We fix this by flattening the design, this is seen on the copy on the right. Both contacts are on the same layer and have no concern for overlap. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e26.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e28.JPG)
+
+Here we have via contacts not aligned correctly.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e29.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e30.JPG)
+
+To fix these, we need tom simply adjust the position until the contacts align exactly.
+
+</details>
+
+<details><summary> Lab For Unimplemented Rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e31.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e32.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e33.JPG)
+
+In this exercise, we have a seal ring. Seal rings are layers that have no electrical meaning. They simply exist as a physical barrier between the chip and the outside world. 
+
+We see that the seal ring is breaking design rules. Magic only shows these seal rings as an abstract view to be drc clean, having not associated properties. We will get overlap errors if we try painting on a diffusion layer.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e34.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e35.JPG)
+
+We will use the seal ring generator from the skywater pdk to generate a gds that has correct seal rings, these cannot be imported however unless as abstract views.
+
+To generate the seal rings, we only need to specify the size of the pad frame outer edge.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e36.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e37.JPG)
+
+This will create a .mag and .gds.  using the addpath and load commands, we will see that there is now a references for the gds during the property command. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e38.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e39.JPG)
+
+Now instead of ./run_magic, we use ./gds_magic to run magic with the appropriate tech file to view the seal ring. We can then see the correct seal ring with the read command.
+
+</details>
+
+<details><summary> Lab For Latchup and Antenna Rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e40.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e41.JPG)
+
+Here we have a layout that violates some of the basic rules and latch up rules.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e42.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e43.JPG)
+
+For fixing this, we need to add a tap cell to the design. Align the tap cell accordingly until the drc violations are no longer shown.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e44.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e45.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e46.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e47.JPG)
+
+In this example, we have a long routing happening in the deisgn which would lead to an antenna violation.
+
+Running electrical check is done with the necessary knowledge of the circuit, meaning extraction needs to be performed. The above commands run the antenna check and reason for violation.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e48.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e49.JPG)
+
+The ratio of area of metal to the area of metal to gate is more than twice the allowed value of 400. We can fix this by tying down the route to a piece of diffusion to act as a diode. Since this occurs on metal 2, we need a standard cell diffusion diode anywhere at metal 2, which is already present in the design, we simply need to wire the input where violation starts to the diode.
+
+If we run extraction and antenna check again, we will not see any issues.
+ 
+</details>
+
+<details><summary> Lab For Density Rules </summary>
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e50.JPG)
+
+Here we have a large design containing of metal 1 and 2 layers. We run the above commands to check the metal coverage.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e51.JPG)
+
+Foundries don’t check the average density across whole layout, but do complicated calculations over fixed windows to find densities. We can use a script in magic to perform the calculations based on a script from the sky130 pdk, and with the gds file written.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e52.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e53.JPG)
+
+Running the file above shows us the errors for the file.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e54.JPG)
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e55.JPG)
+
+We then use a fill generator script along with the magic file for the design to create a fill pattern.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e56.JPG)
+
+If we read the gds file generated, we see the fill pattern for the entire layout.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e57.JPG)
+
+We can see a specific layer using the commands above. 
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e60.JPG)
+
+We need to then merge the fill pattern gds to the original file. The positioning of the two needs to be aligned exactly using the commands above.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e58.JPG)
+
+We can view just the metal 2 layer, meaning the fill pattern was aligned perfectly after the merge.
+
+![](https://github.com/YishenKuma/sd_training/blob/main/day28/e59.JPG)
+
+Checking the density coverage with the same commands, we see that the metal 1 density is now within allowable limits. Metal 3 has also been filled now, and within the density limits. 
 
 </details>
 
